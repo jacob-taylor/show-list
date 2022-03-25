@@ -1,9 +1,19 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import ShowCard from "./ShowCard";
 
 const HomeScreen = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home!</Text>
+    <View style={styles.container}>
+      <View>
+        <Text>THE LIST</Text>
+      </View>
+      <View>
+        {/* TODO: Implement Search Bar */}
+        <Text>Searchbar Placeholder</Text>
+      </View>
+      <ScrollView>
+        <ShowCard />
+      </ScrollView>
     </View>
   );
 };

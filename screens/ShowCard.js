@@ -1,22 +1,50 @@
+import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-// TODO: Format card to look more appealing,, and make heart icon change on press
-const ShowCard = () => {
+const ShowCard = ({ showState, setShowState, showIndex }) => {
+  const pressHandler = (press) => {
+    setShowState((showState) =>
+      showState.map((show, i) => {
+        if (showIndex === i) {
+          return { ...show, [press]: !show[press] };
+        }
+        return show;
+      })
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.showCard}>
-        <View style={styles.imagePlaceHolder} />
-        <Text>Title{"\n"}Subtitle</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity>
-            <Ionicons name="heart" color="black" size={24} />
+      <View style={styles.infoContainer}>
+        <View style={styles.checkBox}>
+          <TouchableOpacity onPress={() => pressHandler("checked")}>
+            <Ionicons
+              name="checkmark"
+              color={showState.checked ? "black" : "white"}
+              size={32}
+            />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="send" color="black" size={24} />
+        </View>
+        <View style={styles.showCard}>
+          <View style={styles.imagePlaceHolder} />
+          <Text>Title{"\n"}Subtitle</Text>
+          <TouchableOpacity onPress={() => pressHandler("favorited")}>
+            <Ionicons
+              name={showState.favorited ? "heart" : "heart-outline"}
+              color="red"
+              size={32}
+            />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="alarm" color="black" size={24} />
+          <TouchableOpacity onPress={() => pressHandler("sent")}>
+            <Ionicons name="send" color="orange" size={32} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => pressHandler("reminded")}>
+            <Ionicons
+              name={showState.reminded ? "alarm" : "alarm-outline"}
+              color="blue"
+              size={32}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -33,22 +61,29 @@ const styles = StyleSheet.create({
   },
   showCard: {
     flexDirection: "row",
-    marginBottom: 30,
-    height: 60,
     justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 50,
+    borderRadius: 1,
     borderWidth: 0.2,
     width: 300,
-    padding: 11,
+    height: 60,
+    padding: 10,
+    marginLeft: 20,
   },
   imagePlaceHolder: {
     borderRadius: 25,
     borderWidth: 25,
   },
-  buttonContainer: {
+  checkBox: {
+    borderRadius: 3,
+    borderWidth: 1,
+  },
+
+  infoContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    padding: 10,
   },
 });
 

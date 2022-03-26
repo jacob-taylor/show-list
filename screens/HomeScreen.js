@@ -1,7 +1,19 @@
+import { useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ShowCard from "./ShowCard";
 
 const HomeScreen = () => {
+  const shows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  const initialShowState = shows.map((show) => ({
+    checked: false,
+    favorited: false,
+    sent: false,
+    reminded: false,
+  }));
+
+  const [showState, setShowState] = useState(initialShowState);
+
   return (
     <View style={styles.container}>
       <View>
@@ -12,7 +24,14 @@ const HomeScreen = () => {
         <Text>Searchbar Placeholder</Text>
       </View>
       <ScrollView>
-        <ShowCard />
+        {shows.map((show, index) => (
+          <ShowCard
+            key={index}
+            showIndex={index}
+            showState={showState[index]}
+            setShowState={setShowState}
+          />
+        ))}
       </ScrollView>
     </View>
   );

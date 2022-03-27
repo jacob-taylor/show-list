@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import ShowCard from "./ShowCard";
+import { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ScrollView, TextInput } from "react-native";
+import ShowCard from "../components/ShowCard";
 
 const HomeScreen = () => {
   const shows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -12,16 +12,28 @@ const HomeScreen = () => {
     reminded: false,
   }));
 
-  const [showState, setShowState] = useState(initialShowState);
+  const initialSearchState = {
+    search: "",
+  };
 
+  const [showState, setShowState] = useState(initialShowState);
+  const [searchState, setSearchState] = useState(initialSearchState);
+
+  const searchHandler = (search) => {
+    setSearchState(search);
+  };
+
+  console.log(searchState);
   return (
     <View style={styles.container}>
       <View>
         <Text>THE LIST</Text>
       </View>
-      <View>
-        {/* TODO: Implement Search Bar */}
-        <Text>Searchbar Placeholder</Text>
+      <View style={styles.searchContainer}>
+        <TextInput
+          placeholder="Search for a Movie or Series..."
+          onChangeText={(newText) => searchHandler(newText)}
+        />
       </View>
       <ScrollView>
         {shows.map((show, index) => (
@@ -42,7 +54,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+  },
+  searchContainer: {
+    flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+    borderWidth: 0.2,
+    width: 300,
+    height: 50,
+    margin: 10,
   },
 });
 

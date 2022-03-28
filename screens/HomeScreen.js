@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  SafeAreaView,
+} from "react-native";
 import ShowCard from "../components/ShowCard";
 
 const HomeScreen = () => {
@@ -25,7 +32,7 @@ const HomeScreen = () => {
 
   console.log(searchState);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <Text>THE LIST</Text>
       </View>
@@ -45,7 +52,7 @@ const HomeScreen = () => {
           />
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

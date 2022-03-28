@@ -1,6 +1,14 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+
+const screenWidth = Dimensions.get("screen").width;
 
 const ShowCard = ({ showState, setShowState, showIndex }) => {
   const pressHandler = (press) => {
@@ -16,37 +24,51 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <View style={styles.checkBox}>
-          <TouchableOpacity onPress={() => pressHandler("checked")}>
-            <Ionicons
-              name="checkmark"
-              color={showState.checked ? "black" : "white"}
-              size={32}
-            />
-          </TouchableOpacity>
+      <View style={styles.checkBox}>
+        <TouchableOpacity onPress={() => pressHandler("checked")}>
+          <Ionicons
+            name="checkmark"
+            color={showState.checked ? "black" : "white"}
+            size={32}
+          />
+        </TouchableOpacity>
+      </View>
+      {/* Wrapped image and title together in a view */}
+      <View style={{ flexDirection: "row" }}>
+        <View style={styles.imagePlaceHolder} />
+        {/* Try using screenWidth * X for width values here and the button container below */}
+        <View style={{ width: 150 }}>
+          {/* numberOfLines makes the text truncate with a ... */}
+          <Text numberOfLines={1}>Avengers: End Game</Text>
+          <Text numberOfLines={1}>I am inevitable</Text>
         </View>
-        <View style={styles.showCard}>
-          <View style={styles.imagePlaceHolder} />
-          <Text>Title{"\n"}Subtitle</Text>
-          <TouchableOpacity onPress={() => pressHandler("favorited")}>
-            <Ionicons
-              name={showState.favorited ? "heart" : "heart-outline"}
-              color="red"
-              size={32}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressHandler("sent")}>
-            <Ionicons name="send" color="orange" size={32} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressHandler("reminded")}>
-            <Ionicons
-              name={showState.reminded ? "alarm" : "alarm-outline"}
-              color="blue"
-              size={32}
-            />
-          </TouchableOpacity>
-        </View>
+      </View>
+
+      {/* By wrapping the buttons in their own container we can mess with the width values of the title and buttons seperately */}
+      <View
+        style={{
+          flexDirection: "row",
+          width: 100, // use screenWidth * X
+          justifyContent: "space-between",
+        }}
+      >
+        <TouchableOpacity onPress={() => pressHandler("favorited")}>
+          <Ionicons
+            name={showState.favorited ? "heart" : "heart-outline"}
+            color="red"
+            size={28}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => pressHandler("sent")}>
+          <Ionicons name="send" color="orange" size={28} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => pressHandler("reminded")}>
+          <Ionicons
+            name={showState.reminded ? "alarm" : "alarm-outline"}
+            color="blue"
+            size={28}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -55,28 +77,29 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  showCard: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    backgroundColor: "white",
     alignItems: "center",
-    borderRadius: 1,
-    borderWidth: 0.2,
-    width: 300,
+    justifyContent: "space-between",
+    borderRadius: 10,
+    margin: 10,
     height: 60,
     padding: 10,
-    marginLeft: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.5,
+    elevation: 10,
   },
   imagePlaceHolder: {
     borderRadius: 25,
     borderWidth: 25,
+    marginRight: 5,
   },
   checkBox: {
     borderRadius: 3,
     borderWidth: 1,
+    marginRight: 10,
   },
 
   infoContainer: {

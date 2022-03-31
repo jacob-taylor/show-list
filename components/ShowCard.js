@@ -37,7 +37,7 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       <View style={{ flexDirection: "row" }}>
         <View style={styles.imagePlaceHolder} />
         {/* Try using screenWidth * X for width values here and the button container below */}
-        <View style={{ width: 150 }}>
+        <View style={{ width: screenWidth * (1 / 3) }}>
           {/* numberOfLines makes the text truncate with a ... */}
           <Text numberOfLines={1}>Avengers: End Game</Text>
           <Text numberOfLines={1}>I am inevitable</Text>

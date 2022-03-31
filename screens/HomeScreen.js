@@ -7,10 +7,12 @@ import {
   TextInput,
   SafeAreaView,
 } from "react-native";
+import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
+import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
 
 const HomeScreen = () => {
-  const shows = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const shows = [];
 
   const initialShowState = shows.map((show) => ({
     checked: false,
@@ -23,14 +25,39 @@ const HomeScreen = () => {
     search: "",
   };
 
+  const initialResState = [];
+
   const [showState, setShowState] = useState(initialShowState);
   const [searchState, setSearchState] = useState(initialSearchState);
+  const [resState, setResState] = useState(initialResState);
+
+  useEffect(() => {
+    fetch(
+      MOVIEDB_API_URL +
+        "search/multi?api_key=" +
+        MOVIEDB_API_KEY +
+        "&query=" +
+        searchState
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        let resInfo = res.results.map((mov, i) => {
+          let info = {};
+          info.id = mov.id;
+          info.media_type = mov.media_type;
+          info.poster = mov.poster_path;
+          info.title = mov.title;
+
+          return info;
+        });
+        setResState(resInfo);
+      });
+  }, [searchState]);
 
   const searchHandler = (search) => {
     setSearchState(search);
   };
 
-  console.log(searchState);
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -42,6 +69,8 @@ const HomeScreen = () => {
           onChangeText={(newText) => searchHandler(newText)}
         />
       </View>
+      {/* Added as placeholder to remind me what's next */}
+      {/* <SearchResults resState={resState} /> */}
       <ScrollView>
         {shows.map((show, index) => (
           <ShowCard
@@ -61,6 +90,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+    padding: 50,
   },
   searchContainer: {
     flexDirection: "row",

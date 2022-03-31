@@ -48,7 +48,7 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       <View
         style={{
           flexDirection: "row",
-          width: 100, // use screenWidth * X
+          width: 100, //* use screenWidth * X
           justifyContent: "space-between",
         }}
       >

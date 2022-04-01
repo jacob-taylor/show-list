@@ -6,10 +6,16 @@ import {
   ScrollView,
   TextInput,
   SafeAreaView,
+  Image,
+  Dimensions,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
+
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
 
 const HomeScreen = () => {
   // this can probably just be a string by itself, no need to make a whole object for one property
@@ -33,6 +39,8 @@ const HomeScreen = () => {
       ) // * Great job on formatting this endpoint and doing the promises
         .then((response) => response.json())
         .then((res) => {
+          if (res.results.length === 0)
+            return setResState([{ title: "No Results Found", id: 0 }]);
           const resInfo = res.results.map((show) => {
             const info = {};
             // So this is totally a valid way to create an object, but in my opinion it's not as straight forward as just returning the object straight out of the function
@@ -43,10 +51,14 @@ const HomeScreen = () => {
             info.media_type = show.media_type;
             info.poster = show.poster_path;
             info.title = show.media_type === "movie" ? show.title : show.name;
-            // info.date =
-            //   show.media_type === "movie"
-            //     ? show.release_date.split("-")[0]
-            //     : show.first_air_date.split("-")[0];
+            info.date =
+              show.media_type === "movie"
+                ? show.release_date
+                  ? show.release_date.split("-")[0]
+                  : ""
+                : show.first_air_date
+                ? show.first_air_date.split("-")[0]
+                : "";
 
             return info;
           });
@@ -75,14 +87,24 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <Text>THE LIST</Text>
-      </View>
+      <Image
+        source={require("../assets/theatre-bg-10.png")}
+        style={{
+          position: "absolute",
+          top: 0,
+        }}
+      />
+      <Image
+        source={require("../assets/title.png")}
+        style={{ height: screenHeight * 0.15, width: screenWidth * 0.9 }}
+      />
       <View style={styles.searchContainer}>
         <TextInput
+          style={{ width: "80%" }}
           placeholder="Search for a Movie or Series..."
           onChangeText={(newText) => searchHandler(newText)}
         />
+        <Ionicons name="search-outline" size={30} />
       </View>
       {searchState.length > 0 ? <SearchResults resState={resState} /> : null}
       <ScrollView>
@@ -113,13 +135,14 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     borderRadius: 25,
     borderWidth: 0.2,
-    width: 300,
+    width: screenWidth * 0.8,
     height: 50,
     margin: 10,
+    backgroundColor: "white",
   },
 });
 

@@ -25,7 +25,8 @@ const TabScreen = () => {
         },
         tabBarActiveTintColor: "tomato",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { height: 100 },
+        // tabBarStyle: { height: 100 },
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Tab.Screen

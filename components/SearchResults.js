@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 10,
     position: "absolute",
-    top: screenHeight * 0.275,
+    // top: 115 + screenHeight * 0.15, // * used if we keep the title shown while searching
+    top: 115,
     paddingVertical: 5,
   },
   result: {

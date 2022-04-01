@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   TextInput,
@@ -94,10 +93,12 @@ const HomeScreen = () => {
           top: 0,
         }}
       />
-      <Image
-        source={require("../assets/title.png")}
-        style={{ height: screenHeight * 0.15, width: screenWidth * 0.9 }}
-      />
+      {searchState.length === 0 ? (
+        <Image
+          source={require("../assets/title.png")}
+          style={{ height: screenHeight * 0.15, width: screenWidth * 0.9 }}
+        />
+      ) : null}
       <View style={styles.searchContainer}>
         <TextInput
           style={{ width: "80%" }}

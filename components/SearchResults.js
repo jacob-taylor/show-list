@@ -4,20 +4,30 @@ import {
   Text,
   View,
   TouchableOpacity,
+  FlatList,
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const screenWidth = Dimensions.get("screen").width;
 
-const SearchResults = ({ resState }) => {
+const renderItem = ({ item }) => {
   return (
-    <View>
-      <Text>PLACEHOLDER</Text>
-      <Text>PLACEHOLDER</Text>
-      <Text>PLACEHOLDER</Text>
-      <Text>PLACEHOLDER</Text>
-      <Text>PLACEHOLDER</Text>
+    <TouchableOpacity style={styles.result}>
+      <Text>{item.title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const SearchResults = ({ resState }) => {
+  console.log(resState);
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={resState}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
@@ -25,19 +35,16 @@ const SearchResults = ({ resState }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "space-between",
-    borderRadius: 10,
-    margin: 10,
-    height: 60,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3.5,
-    elevation: 10,
+  },
+  result: {
+    backgroundColor: "#f5f520",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
 });
 

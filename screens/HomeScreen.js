@@ -33,6 +33,7 @@ const HomeScreen = () => {
   const [resState, setResState] = useState(initialResState);
 
   useEffect(() => {
+    //if searchstate is not an empty string do fetch, else clear resState
     fetch(
       MOVIEDB_API_URL +
         "search/multi?api_key=" +
@@ -42,12 +43,8 @@ const HomeScreen = () => {
     ) // * Great job on formatting this endpoint and doing the promises
       .then((response) => response.json())
       .then((res) => {
-        // I favor using const over let when assigning variables, really the only reason I'd ever make a let variable is if I need to reassign it.
-        // https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75#:~:text=%60const%60%20is%20a%20signal%20that,always%20the%20entire%20containing%20function.
-        // That being said since these vars are just placeholders for the data and they would never be reassigned a new value, they're better off being const
-        let resInfo = res.results.map((mov, i) => {
-          // index is an optional param here, if it's not used you don't need to include it in the map ;)
-          let info = {};
+        const resInfo = res.results.map((mov) => {
+          const info = {};
           // So this is totally a valid way to create an object, but in my opinion it's not as straight forward as just returning the object straight out of the function
           // I think part of it is just less typing/code but also it's less variables to deal with in the long run.
           // Also mapping over an array is so common that you'll be doing this exact code so much that all this extra isn't needed eventually.
@@ -56,9 +53,11 @@ const HomeScreen = () => {
           info.media_type = mov.media_type;
           info.poster = mov.poster_path;
           info.title = mov.title;
+          info.release_date = mov.date;
 
           return info;
         });
+
         // Some food for thought, this is how I would write this map() function and just be aware of the differences
         // This just takes practice, because after the 100th map() function you write you start to try and see how little you need to for it work
 
@@ -88,16 +87,20 @@ const HomeScreen = () => {
           placeholder="Search for a Movie or Series..."
           onChangeText={(newText) => searchHandler(newText)}
         />
-      </View>
-      {/* Added as placeholder to remind me what's next */}
-      {/* <SearchResults resState={resState} /> */}
-      {/* Notes on what is to come with the <SearchResults /> component.
+        <SearchResults resState={resState} />
+        {/* Create dropdwo with CSS, potentially use absolute positon so the results don't 
+          move the LIST 
+            PRO TIP- inline style, if any letters in search state then show if empty hide
+        
+            Notes on what is to come with the <SearchResults /> component.
             When a user presses a result it should automatically be put into
             the list of Showcards (added to the shows state). And the list should 
             disappear to show the list of Showcards again. Eventually this will 
             also be saved in a DB but for now it should all be done with state
             since the DB save will be an after affect of the state change anyway.
       */}
+      </View>
+
       <ScrollView>
         {/* I feel like we should be mapping over showState here
             instead of the shows array since the shows array is really

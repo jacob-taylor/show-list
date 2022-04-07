@@ -21,33 +21,30 @@ const SearchResults = ({ resState }) => {
   const Result = ({ item }) => {
     const [InfoModalVisible, setInfoModalVisible] = useState(false);
     return (
-      <SafeAreaView style={styles.result}>
-        <TouchableOpacity
-          style={styles.result}
-          onPress={() => {
-            // TODO: Add item (show) to showlist and then clear searchState and resState
-            console.log(item);
-          }}
-          onLongPress={() => {
-            setInfoModalVisible(true);
-          }}
-        >
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text numberOfLines={1} style={{ width: "75%" }}>
-              {item.title}
-            </Text>
-            <Text>{item.media_type}</Text>
-          </View>
-          <Text>{item.date}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.result}
+        onPress={() => {
+          // TODO: Add item (show) to showlist and then clear searchState and resState
+          console.log(item);
+        }}
+        onLongPress={() => {
+          setInfoModalVisible(true);
+        }}
+      >
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text numberOfLines={1} style={{ width: "75%" }}>
+            {item.title}
+          </Text>
+          <Text>{item.media_type}</Text>
+        </View>
+        <Text>{item.date}</Text>
         <InfoModal
           modalVisible={InfoModalVisible}
           setModalVisible={setInfoModalVisible}
           info={item}
+          onList={false}
         />
-      </SafeAreaView>
+      </TouchableOpacity>
     );
   };
 

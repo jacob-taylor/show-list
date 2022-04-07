@@ -46,7 +46,8 @@ const HomeScreen = () => {
             // * again this is totally valid, the main part is you figured it out and it works just as good! All my notes are just code optimization of how I like things
             info.id = show.id;
             info.media_type = show.media_type;
-            info.poster = show.poster_path;
+            // info.poster = show.poster_path;
+            info.poster = show.backdrop_path; // * Switched to backdrop to better accomodate a square aspect ratio in modal
             info.title = show.media_type === "movie" ? show.title : show.name;
             info.date =
               show.media_type === "movie"

@@ -1,76 +1,157 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  FlatList,
   Dimensions,
   Modal,
-  SafeAreaView,
   Image,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import {
+  MOVIEDB_API_KEY,
+  MOVIEDB_API_URL,
+  MOVIEDB_POSTER_URL,
+} from "../../constants";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const InfoModal = ({ modalVisible, setModalVisible, info }) => {
-  const posterURL = "https://image.tmdb.org/t/p/original" + info.poster;
-  console.log(posterURL);
+const InfoModal = ({ modalVisible, setModalVisible, info, onList }) => {
+  const [watchProviders, setWatchProviders] = useState({});
+
+  useEffect(() => {
+    if (modalVisible) {
+      console.log("info", info);
+      fetch(
+        `${MOVIEDB_API_URL}${info.media_type}/${info.id}/watch/providers?api_key=${MOVIEDB_API_KEY}`
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          // TODO: Ask client about other countries for settings down the road
+          setWatchProviders(res.results.US);
+        });
+    }
+  }, [modalVisible]);
+
   return (
-    // TODO: Style Modal window with info and display poster
     <Modal
       visible={modalVisible}
       animationType="slide"
-      presentationStyle="formSheet"
+      presentationStyle="pageSheet"
     >
-      <SafeAreaView style={styles.modalView}>
+      <View style={styles.modalView}>
         <TouchableOpacity
-          style={styles.infoTouch}
-          onPress={() => setModalVisible(false)}
+          onPress={() => {
+            setModalVisible(false);
+          }}
+          style={styles.closeBtn}
         >
-          <Image source={{ uri: posterURL }} />
-          <Text>{info.title}</Text>
-          <Text>{info.date}</Text>
-          <Text>{info.media_type}</Text>
-          <Text>{info.poster}</Text>
-          <Ionicons name="trash" color="white" size={24} />
+          <Ionicons name="close" color="white" size={30} />
         </TouchableOpacity>
-      </SafeAreaView>
+        <View style={styles.container} onPress={() => setModalVisible(false)}>
+          <Image
+            source={{ uri: MOVIEDB_POSTER_URL + info.poster }}
+            style={styles.streamingImg}
+          />
+          <Text
+            style={{ fontSize: 38, fontWeight: "bold", textAlign: "center" }}
+          >
+            {info.title}
+          </Text>
+          <Text style={{ fontSize: 20, textAlign: "center" }}>{info.date}</Text>
+          <View
+            style={{
+              height: screenHeight * 0.27,
+              flexDirection: "column",
+            }}
+            horizontal={true}
+          >
+            {watchProviders
+              ? // TODO: use .sort to sort by key name
+                Object.entries(watchProviders).map(([key, value]) => {
+                  if (key !== "link") {
+                    return (
+                      <View style={{ paddingVertical: 5 }}>
+                        <Text>{key.toUpperCase()}</Text>
+                        <ScrollView
+                          horizontal={true}
+                          contentContainerStyle={{ flexDirection: "column" }}
+                        >
+                          <View style={{ flexDirection: "row" }}>
+                            {value.map((provider) => {
+                              // TODO: Think about options for provider priority and ask client
+                              if (provider.display_priority <= 36) {
+                                return (
+                                  <Image
+                                    source={{
+                                      uri:
+                                        MOVIEDB_POSTER_URL + provider.logo_path,
+                                    }}
+                                    style={{ height: 50, width: 50 }}
+                                    key={provider.provider_id}
+                                  />
+                                );
+                              }
+                            })}
+                          </View>
+                        </ScrollView>
+                      </View>
+                    );
+                  }
+                })
+              : null}
+          </View>
+          {onList ? null : ( //  TODO: Replace null with "Remove from List" button
+            <TouchableOpacity style={styles.addBtn}>
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                Add to List
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    padding: 50,
-  },
-  infoContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    padding: 10,
-  },
-  infoTouch: {
-    borderRadius: 3,
-    borderWidth: 1,
-    marginRight: 10,
-  },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
     padding: 35,
     alignItems: "center",
+  },
+  container: {
+    // TODO: Figure out why this is fucked.
+    flexDirection: "column",
+    justifyContent: "space-between",
+    borderColor: "red",
+  },
+  addBtn: {
+    backgroundColor: "#0044D0",
+    borderRadius: 12,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.5,
+    elevation: 10,
+  },
+  closeBtn: {
+    backgroundColor: "black",
+    borderRadius: 50,
+    alignSelf: "flex-start",
+  },
+  streamingImg: {
+    height: screenHeight * 0.3,
+    width: screenWidth * 0.7,
+    borderRadius: 20,
+    marginTop: 20,
+    alignSelf: "center",
   },
 });
 export default InfoModal;

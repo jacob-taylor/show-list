@@ -6,41 +6,56 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  Modal,
+  SafeAreaView,
 } from "react-native";
+import InfoModal from "./modals/InfoModal";
+
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 // * Gonna have to pass in some handlers to deal with HomeScreen state
 // * PROP DRILLING!
-const renderItem = ({ item }) => {
-  return (
-    <TouchableOpacity
-      style={styles.result}
-      onPress={() => {
-        // TODO: Add item (show) to showlist and then clear searchState and resState
-        console.log(item);
-      }}
-      onLongPress={() => {
-        // TODO: Lets add a longPress feature where a modal pops up with more info about the show if the user needs to clarify
-      }}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text numberOfLines={1} style={{ width: "75%" }}>
-          {item.title}
-        </Text>
-        <Text>{item.media_type}</Text>
-      </View>
-      <Text>{item.date}</Text>
-    </TouchableOpacity>
-  );
-};
 
 const SearchResults = ({ resState }) => {
+  const Result = ({ item }) => {
+    const [InfoModalVisible, setInfoModalVisible] = useState(false);
+    return (
+      <SafeAreaView style={styles.result}>
+        <TouchableOpacity
+          style={styles.result}
+          onPress={() => {
+            // TODO: Add item (show) to showlist and then clear searchState and resState
+            console.log(item);
+          }}
+          onLongPress={() => {
+            setInfoModalVisible(true);
+          }}
+        >
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text numberOfLines={1} style={{ width: "75%" }}>
+              {item.title}
+            </Text>
+            <Text>{item.media_type}</Text>
+          </View>
+          <Text>{item.date}</Text>
+        </TouchableOpacity>
+        <InfoModal
+          modalVisible={InfoModalVisible}
+          setModalVisible={setInfoModalVisible}
+          info={item}
+        />
+      </SafeAreaView>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={resState}
-        renderItem={renderItem}
+        renderItem={({ item }) => <Result item={item} />}
         keyExtractor={(item) => item.id}
       />
     </View>

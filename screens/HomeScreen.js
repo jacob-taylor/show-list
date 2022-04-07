@@ -17,7 +17,6 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const HomeScreen = () => {
-  // this can probably just be a string by itself, no need to make a whole object for one property
   const initialSearchState = "";
 
   const initialResState = [];
@@ -27,7 +26,6 @@ const HomeScreen = () => {
   const [resState, setResState] = useState(initialResState);
 
   useEffect(() => {
-    //if searchstate is not an empty string do fetch, else clear resState
     if (searchState) {
       fetch(
         MOVIEDB_API_URL +
@@ -35,7 +33,7 @@ const HomeScreen = () => {
           MOVIEDB_API_KEY +
           "&query=" +
           searchState
-      ) // * Great job on formatting this endpoint and doing the promises
+      )
         .then((response) => response.json())
         .then((res) => {
           if (res.results.length === 0)
@@ -109,16 +107,11 @@ const HomeScreen = () => {
       </View>
       {searchState.length > 0 ? <SearchResults resState={resState} /> : null}
       <ScrollView>
-        {/* I feel like we should be mapping over showState here
-            instead of the shows array since the shows array is really
-            just used to help us test the cards without manually
-            adding them from search results */}
         {showState.map((show, index) => (
           <ShowCard
             key={index}
             showIndex={index}
-            showState={show} // mapping over showState will also let us do this
-            // showState={show} instead of calling the array interation using the index
+            showState={show}
             setShowState={setShowState}
           />
         ))}

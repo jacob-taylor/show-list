@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    padding: 50,
   },
   searchContainer: {
     flexDirection: "row",

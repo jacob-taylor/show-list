@@ -32,7 +32,7 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.85}
-      onLongPress={() => {
+      onPress={() => {
         setInfoModalVisible(true);
       }}
     >
@@ -58,7 +58,6 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
           style={styles.streamingImg}
         />
 
-        {/* Try using screenWidth * X for width values here and the button container below */}
         <View
           style={{
             width: screenWidth * 0.3,
@@ -66,13 +65,11 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
             marginLeft: 10,
           }}
         >
-          {/* numberOfLines makes the text truncate with a ... */}
           <Text numberOfLines={1}>{show.title}</Text>
           <Text numberOfLines={1}>{show.date}</Text>
         </View>
       </View>
 
-      {/* By wrapping the buttons in their own container we can mess with the width values of the title and buttons seperately */}
       <View
         style={{
           flexDirection: "row",
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   streamingImg: {
-    height: 80,
+    height: screenHeight * 0.1,
     width: 60,
     borderRadius: 5,
     marginBottom: 10,

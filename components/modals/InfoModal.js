@@ -8,6 +8,7 @@ import {
   Modal,
   Image,
   ScrollView,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -34,7 +35,6 @@ const InfoModal = ({
 
   useEffect(() => {
     if (modalVisible) {
-      console.log("info", info);
       fetch(
         `${MOVIEDB_API_URL}${info.media_type}/${info.id}/watch/providers?api_key=${MOVIEDB_API_KEY}`
       )
@@ -61,7 +61,7 @@ const InfoModal = ({
         >
           <Ionicons name="close" color="white" size={30} />
         </TouchableOpacity>
-        <View style={styles.container} onPress={() => setModalVisible(false)}>
+        <View style={styles.container}>
           <Image
             source={
               info.poster || info.backdrop
@@ -77,13 +77,14 @@ const InfoModal = ({
           >
             {info.title}
           </Text>
-          <Text style={{ fontSize: 20, textAlign: "center" }}>{info.date}</Text>
-          <View
-            style={{
-              height: screenHeight * 0.27,
+          <Text style={{ fontSize: 20, textAlign: "center", marginBottom: 10 }}>
+            {info.date}
+          </Text>
+          <ScrollView
+            contentContainerStyle={{
               flexDirection: "column",
             }}
-            horizontal={true}
+            indicatorStyle="black"
           >
             {watchProviders
               ? // TODO: use .sort to sort by key name
@@ -106,11 +107,20 @@ const InfoModal = ({
                   )
                   .map(([key, value], index) => {
                     return (
-                      <View style={{ paddingVertical: 5 }} key={index}>
+                      <View
+                        style={{
+                          paddingVertical: 5,
+                          width: screenWidth * 0.7,
+                        }}
+                        key={index}
+                      >
                         <Text>{key.toUpperCase()}</Text>
                         <ScrollView
                           horizontal={true}
-                          contentContainerStyle={{ flexDirection: "column" }}
+                          contentContainerStyle={{
+                            flexDirection: "column",
+                          }}
+                          indicatorStyle="black"
                         >
                           <View style={{ flexDirection: "row" }}>
                             {value
@@ -121,14 +131,27 @@ const InfoModal = ({
                               )
                               .map((provider) => {
                                 return (
-                                  <Image
-                                    source={{
-                                      uri:
-                                        MOVIEDB_POSTER_URL + provider.logo_path,
-                                    }}
-                                    style={{ height: 50, width: 50 }}
+                                  <TouchableOpacity
                                     key={provider.provider_id}
-                                  />
+                                    activeOpacity={1}
+                                    onPress={() => {
+                                      // TODO: Ask if client wants this
+                                      // Linking.openURL(watchProviders.link);
+                                    }}
+                                  >
+                                    <Image
+                                      source={{
+                                        uri:
+                                          MOVIEDB_POSTER_URL +
+                                          provider.logo_path,
+                                      }}
+                                      style={{
+                                        height: 50,
+                                        width: 50,
+                                        marginHorizontal: 5,
+                                      }}
+                                    />
+                                  </TouchableOpacity>
                                 );
                               })}
                           </View>
@@ -137,7 +160,7 @@ const InfoModal = ({
                     );
                   })
               : null}
-          </View>
+          </ScrollView>
           {onList ? (
             <TouchableOpacity
               style={[styles.btn, { backgroundColor: "#a4161a" }]}
@@ -172,13 +195,12 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: "white",
     padding: 35,
-    alignItems: "center",
+    flex: 1,
   },
   container: {
-    // TODO: Figure out why this is fucked.
+    flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
-    borderColor: "red",
+    alignItems: "center",
   },
   btn: {
     borderRadius: 12,
@@ -190,6 +212,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3.5,
     elevation: 10,
+    marginTop: 10,
+    width: "100%",
   },
   closeBtn: {
     backgroundColor: "black",

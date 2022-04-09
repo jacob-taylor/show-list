@@ -7,8 +7,8 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
-
 import InfoModal from "./modals/InfoModal";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -28,6 +28,7 @@ const SearchResults = ({ resState, addShowToList }) => {
         onLongPress={() => {
           setInfoModalVisible(true);
         }}
+        disabled={item.id === 0}
       >
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text numberOfLines={1} style={{ width: "75%" }}>
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     position: "absolute",
     // top: 115 + screenHeight * 0.15, // * used if we keep the title shown while searching
-    top: 115,
+    top: 68 + getStatusBarHeight(),
     paddingVertical: 5,
   },
   result: {

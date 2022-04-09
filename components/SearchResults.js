@@ -16,26 +16,14 @@ const screenHeight = Dimensions.get("screen").height;
 // * Gonna have to pass in some handlers to deal with HomeScreen state
 // * PROP DRILLING!
 
-const SearchResults = ({
-  resState,
-  showState,
-  setShowState,
-  setResState,
-  setSearchState,
-}) => {
+const SearchResults = ({ resState, addShowToList }) => {
   const Result = ({ item }) => {
-    const [InfoModalVisible, setInfoModalVisible] = useState(false);
+    const [infoModalVisible, setInfoModalVisible] = useState(false);
     return (
       <TouchableOpacity
         style={styles.result}
         onPress={() => {
-          // ** setShowState == how to manipulate show list - Make sure when adding not to override what's currently in the list (use rest operator...)
-          // hint: https://stackoverflow.com/questions/59100863/how-to-set-state-array-using-react-hooks
-          // TODO: Add item (show) to showlist and then clear searchState and resState
-
-          setShowState([...showState, item]);
-          setResState([]);
-          setSearchState("");
+          addShowToList(item);
         }}
         onLongPress={() => {
           setInfoModalVisible(true);
@@ -49,12 +37,11 @@ const SearchResults = ({
         </View>
         <Text>{item.date}</Text>
         <InfoModal
-          modalVisible={InfoModalVisible}
+          modalVisible={infoModalVisible}
           setModalVisible={setInfoModalVisible}
           info={item}
           onList={false}
-          showState={showState}
-          setShowState={setShowState}
+          addShowToList={addShowToList}
         />
       </TouchableOpacity>
     );

@@ -37,25 +37,28 @@ const HomeScreen = () => {
         .then((res) => {
           if (res.results.length === 0)
             return setResState([{ title: "No Results Found", id: 0 }]);
-          const resInfo = res.results.map((show) => {
-            const info = {};
+          const resInfo = res.results
+            .map((show) => {
+              const info = {};
 
-            info.id = show.id;
-            info.media_type = show.media_type;
-            info.poster = show.poster_path;
-            info.backdrop = show.backdrop_path; // * Switched to backdrop to better accomodate a square aspect ratio in modal
-            info.title = show.media_type === "movie" ? show.title : show.name;
-            info.date =
-              show.media_type === "movie"
-                ? show.release_date
-                  ? show.release_date.split("-")[0]
-                  : ""
-                : show.first_air_date
-                ? show.first_air_date.split("-")[0]
-                : "";
+              info.id = show.id;
+              info.media_type = show.media_type;
+              info.poster = show.poster_path;
+              info.backdrop = show.backdrop_path;
+              info.title = show.media_type === "movie" ? show.title : show.name;
+              info.date =
+                show.media_type === "movie"
+                  ? show.release_date
+                    ? show.release_date.split("-")[0]
+                    : ""
+                  : show.first_air_date
+                  ? show.first_air_date.split("-")[0]
+                  : "";
 
-            return info;
-          });
+              return info;
+            })
+            .filter((show) => !showState.map((s) => s.id).includes(show.id))
+            .filter((show) => show.media_type !== "person");
 
           setResState(resInfo);
         });
@@ -63,6 +66,16 @@ const HomeScreen = () => {
       setResState([]);
     }
   }, [searchState]);
+
+  const addShowToList = (show) => {
+    setShowState((showState) => [...showState, show]);
+    setResState([]);
+    setSearchState("");
+  };
+
+  const removeShowFromList = (show) => {
+    setShowState((showState) => showState.filter((s) => s.id !== show.id));
+  };
 
   const searchHandler = (search) => {
     setSearchState(search);
@@ -87,6 +100,7 @@ const HomeScreen = () => {
         <TextInput
           style={{ width: "80%" }}
           placeholder="Search for a Movie or Series..."
+          value={searchState}
           onChangeText={(newText) => searchHandler(newText)}
         />
         <Ionicons name="search-outline" size={30} />
@@ -96,19 +110,14 @@ const HomeScreen = () => {
           <ShowCard
             key={index}
             showIndex={index}
-            showState={show}
+            show={show}
             setShowState={setShowState}
+            removeShowFromList={removeShowFromList}
           />
         ))}
       </ScrollView>
       {searchState.length > 0 ? (
-        <SearchResults
-          resState={resState}
-          showState={showState}
-          setShowState={setShowState}
-          setResState={setResState}
-          setSearchState={setSearchState}
-        />
+        <SearchResults resState={resState} addShowToList={addShowToList} />
       ) : null}
     </SafeAreaView>
   );

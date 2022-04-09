@@ -24,10 +24,13 @@ const InfoModal = ({
   setModalVisible,
   info,
   onList,
-  showState,
-  setShowState,
+  addShowToList,
+  removeShowFromList,
 }) => {
   const [watchProviders, setWatchProviders] = useState({});
+
+  // TODO: Think about options for provider priority and ask client
+  const DISPLAY_PRIORITY_CUTOFF = 36;
 
   useEffect(() => {
     if (modalVisible) {
@@ -38,7 +41,7 @@ const InfoModal = ({
         .then((response) => response.json())
         .then((res) => {
           // TODO: Ask client about other countries for settings down the road
-          setWatchProviders(res.results.US);
+          if (res?.results?.US) setWatchProviders(res.results.US);
         });
     }
   }, [modalVisible]);
@@ -60,7 +63,13 @@ const InfoModal = ({
         </TouchableOpacity>
         <View style={styles.container} onPress={() => setModalVisible(false)}>
           <Image
-            source={{ uri: MOVIEDB_POSTER_URL + info.backdrop }}
+            source={
+              info.poster || info.backdrop
+                ? {
+                    uri: MOVIEDB_POSTER_URL + (info.backdrop || info.poster),
+                  }
+                : require("../../assets/empty-poster.png")
+            }
             style={styles.streamingImg}
           />
           <Text
@@ -78,19 +87,39 @@ const InfoModal = ({
           >
             {watchProviders
               ? // TODO: use .sort to sort by key name
-                Object.entries(watchProviders).map(([key, value]) => {
-                  if (key !== "link") {
+                Object.entries(watchProviders)
+                  .sort((a, b) => {
+                    if (a[0] < b[0]) {
+                      return -1;
+                    }
+                    if (a[0] > b[0]) {
+                      return 1;
+                    }
+                    return 0;
+                  })
+                  .filter(([key, value]) => key !== "link")
+                  .filter(
+                    ([key, value]) =>
+                      value.filter(
+                        (v) => v.display_priority <= DISPLAY_PRIORITY_CUTOFF
+                      ).length !== 0
+                  )
+                  .map(([key, value], index) => {
                     return (
-                      <View style={{ paddingVertical: 5 }}>
+                      <View style={{ paddingVertical: 5 }} key={index}>
                         <Text>{key.toUpperCase()}</Text>
                         <ScrollView
                           horizontal={true}
                           contentContainerStyle={{ flexDirection: "column" }}
                         >
                           <View style={{ flexDirection: "row" }}>
-                            {value.map((provider) => {
-                              // TODO: Think about options for provider priority and ask client
-                              if (provider.display_priority <= 36) {
+                            {value
+                              .filter(
+                                (provider) =>
+                                  provider.display_priority <=
+                                  DISPLAY_PRIORITY_CUTOFF
+                              )
+                              .map((provider) => {
                                 return (
                                   <Image
                                     source={{
@@ -101,21 +130,31 @@ const InfoModal = ({
                                     key={provider.provider_id}
                                   />
                                 );
-                              }
-                            })}
+                              })}
                           </View>
                         </ScrollView>
                       </View>
                     );
-                  }
-                })
+                  })
               : null}
           </View>
-          {onList ? null : ( //  TODO: Replace null with "Remove from List" button
+          {onList ? (
             <TouchableOpacity
-              style={styles.addBtn}
+              style={[styles.btn, { backgroundColor: "#a4161a" }]}
               onPress={() => {
-                setShowState([...showState, info]);
+                removeShowFromList(info);
+                setModalVisible(false);
+              }}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                Remove from List
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.btn, { backgroundColor: "#0044D0" }]}
+              onPress={() => {
+                addShowToList(info);
               }}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
@@ -141,8 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderColor: "red",
   },
-  addBtn: {
-    backgroundColor: "#0044D0",
+  btn: {
     borderRadius: 12,
     height: 40,
     justifyContent: "center",

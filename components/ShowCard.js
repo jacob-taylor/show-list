@@ -9,11 +9,14 @@ import {
 } from "react-native";
 import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
+import InfoModal from "./modals/InfoModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const ShowCard = ({ showState, setShowState, showIndex }) => {
+const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
+
   const pressHandler = (press) => {
     setShowState((showState) =>
       showState.map((show, i) => {
@@ -26,12 +29,18 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={0.85}
+      onLongPress={() => {
+        setInfoModalVisible(true);
+      }}
+    >
       <View style={styles.checkBox}>
         <TouchableOpacity onPress={() => pressHandler("checked")}>
           <Ionicons
             name="checkmark"
-            color={showState.checked ? "black" : "white"}
+            color={show.checked ? "black" : "white"}
             size={32}
           />
         </TouchableOpacity>
@@ -39,19 +48,27 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       {/* Wrapped image and title together in a view */}
       <View style={{ flexDirection: "row" }}>
         <Image
-          source={{ uri: MOVIEDB_POSTER_URL + showState.poster }}
+          source={
+            show.poster || show.backdrop
+              ? {
+                  uri: MOVIEDB_POSTER_URL + (show.poster || show.backdrop),
+                }
+              : require("../assets/empty-poster.png")
+          }
           style={styles.streamingImg}
         />
+
         {/* Try using screenWidth * X for width values here and the button container below */}
         <View
           style={{
-            width: screenWidth * (1 / 3),
+            width: screenWidth * 0.3,
             justifyContent: "center",
+            marginLeft: 10,
           }}
         >
           {/* numberOfLines makes the text truncate with a ... */}
-          <Text numberOfLines={1}>{showState.title}</Text>
-          <Text numberOfLines={1}>{showState.date}</Text>
+          <Text numberOfLines={1}>{show.title}</Text>
+          <Text numberOfLines={1}>{show.date}</Text>
         </View>
       </View>
 
@@ -65,7 +82,7 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       >
         <TouchableOpacity onPress={() => pressHandler("favorited")}>
           <Ionicons
-            name={showState.favorited ? "heart" : "heart-outline"}
+            name={show.favorited ? "heart" : "heart-outline"}
             color="red"
             size={28}
           />
@@ -75,13 +92,20 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => pressHandler("reminded")}>
           <Ionicons
-            name={showState.reminded ? "alarm" : "alarm-outline"}
+            name={show.reminded ? "alarm" : "alarm-outline"}
             color="blue"
             size={28}
           />
         </TouchableOpacity>
       </View>
-    </View>
+      <InfoModal
+        modalVisible={infoModalVisible}
+        setModalVisible={setInfoModalVisible}
+        info={show}
+        onList={true}
+        removeShowFromList={removeShowFromList}
+      />
+    </TouchableOpacity>
   );
 };
 
@@ -95,7 +119,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
     height: screenHeight * 0.1,
-    width: screenWidth * 0.7,
     padding: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

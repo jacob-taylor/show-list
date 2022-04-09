@@ -42,8 +42,8 @@ const HomeScreen = () => {
 
             info.id = show.id;
             info.media_type = show.media_type;
-            // info.poster = show.poster_path;
-            info.poster = show.backdrop_path; // * Switched to backdrop to better accomodate a square aspect ratio in modal
+            info.poster = show.poster_path;
+            info.backdrop = show.backdrop_path; // * Switched to backdrop to better accomodate a square aspect ratio in modal
             info.title = show.media_type === "movie" ? show.title : show.name;
             info.date =
               show.media_type === "movie"
@@ -91,15 +91,6 @@ const HomeScreen = () => {
         />
         <Ionicons name="search-outline" size={30} />
       </View>
-
-      {searchState.length > 0 ? (
-        <SearchResults
-          resState={resState}
-          setShowState={setShowState}
-          setResState={setResState}
-          setSearchState={setSearchState}
-        />
-      ) : null}
       <ScrollView>
         {showState.map((show, index) => (
           <ShowCard
@@ -110,6 +101,15 @@ const HomeScreen = () => {
           />
         ))}
       </ScrollView>
+      {searchState.length > 0 ? (
+        <SearchResults
+          resState={resState}
+          showState={showState}
+          setShowState={setShowState}
+          setResState={setResState}
+          setSearchState={setSearchState}
+        />
+      ) : null}
     </SafeAreaView>
   );
 };

@@ -6,9 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  Modal,
-  SafeAreaView,
 } from "react-native";
+
 import InfoModal from "./modals/InfoModal";
 
 const screenWidth = Dimensions.get("screen").width;
@@ -19,6 +18,7 @@ const screenHeight = Dimensions.get("screen").height;
 
 const SearchResults = ({
   resState,
+  showState,
   setShowState,
   setResState,
   setSearchState,
@@ -32,7 +32,10 @@ const SearchResults = ({
           // ** setShowState == how to manipulate show list - Make sure when adding not to override what's currently in the list (use rest operator...)
           // hint: https://stackoverflow.com/questions/59100863/how-to-set-state-array-using-react-hooks
           // TODO: Add item (show) to showlist and then clear searchState and resState
-          console.log(item);
+
+          setShowState([...showState, item]);
+          setResState([]);
+          setSearchState("");
         }}
         onLongPress={() => {
           setInfoModalVisible(true);
@@ -50,6 +53,8 @@ const SearchResults = ({
           setModalVisible={setInfoModalVisible}
           info={item}
           onList={false}
+          showState={showState}
+          setShowState={setShowState}
         />
       </TouchableOpacity>
     );
@@ -61,6 +66,7 @@ const SearchResults = ({
         data={resState}
         renderItem={({ item }) => <Result item={item} />}
         keyExtractor={(item) => item.id}
+        keyboardShouldPersistTaps="handled"
       />
     </View>
   );

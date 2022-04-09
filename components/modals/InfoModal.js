@@ -19,7 +19,14 @@ import {
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const InfoModal = ({ modalVisible, setModalVisible, info, onList }) => {
+const InfoModal = ({
+  modalVisible,
+  setModalVisible,
+  info,
+  onList,
+  showState,
+  setShowState,
+}) => {
   const [watchProviders, setWatchProviders] = useState({});
 
   useEffect(() => {
@@ -53,7 +60,7 @@ const InfoModal = ({ modalVisible, setModalVisible, info, onList }) => {
         </TouchableOpacity>
         <View style={styles.container} onPress={() => setModalVisible(false)}>
           <Image
-            source={{ uri: MOVIEDB_POSTER_URL + info.poster }}
+            source={{ uri: MOVIEDB_POSTER_URL + info.backdrop }}
             style={styles.streamingImg}
           />
           <Text
@@ -105,7 +112,12 @@ const InfoModal = ({ modalVisible, setModalVisible, info, onList }) => {
               : null}
           </View>
           {onList ? null : ( //  TODO: Replace null with "Remove from List" button
-            <TouchableOpacity style={styles.addBtn}>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => {
+                setShowState([...showState, info]);
+              }}
+            >
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Add to List
               </Text>

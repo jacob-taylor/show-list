@@ -5,10 +5,13 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
+import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 
 const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
 
 const ShowCard = ({ showState, setShowState, showIndex }) => {
   const pressHandler = (press) => {
@@ -35,12 +38,20 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       </View>
       {/* Wrapped image and title together in a view */}
       <View style={{ flexDirection: "row" }}>
-        <View style={styles.imagePlaceHolder} />
+        <Image
+          source={{ uri: MOVIEDB_POSTER_URL + showState.poster }}
+          style={styles.streamingImg}
+        />
         {/* Try using screenWidth * X for width values here and the button container below */}
-        <View style={{ width: screenWidth * (1 / 3) }}>
+        <View
+          style={{
+            width: screenWidth * (1 / 3),
+            justifyContent: "center",
+          }}
+        >
           {/* numberOfLines makes the text truncate with a ... */}
-          <Text numberOfLines={1}>Avengers: End Game</Text>
-          <Text numberOfLines={1}>I am inevitable</Text>
+          <Text numberOfLines={1}>{showState.title}</Text>
+          <Text numberOfLines={1}>{showState.date}</Text>
         </View>
       </View>
 
@@ -48,7 +59,7 @@ const ShowCard = ({ showState, setShowState, showIndex }) => {
       <View
         style={{
           flexDirection: "row",
-          width: 100, //* use screenWidth * X
+          width: screenWidth * 0.3,
           justifyContent: "space-between",
         }}
       >
@@ -83,18 +94,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderRadius: 10,
     margin: 10,
-    height: 60,
+    height: screenHeight * 0.1,
+    width: screenWidth * 0.7,
     padding: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3.5,
     elevation: 10,
-  },
-  imagePlaceHolder: {
-    borderRadius: 25,
-    borderWidth: 25,
-    marginRight: 5,
   },
   checkBox: {
     borderRadius: 3,
@@ -107,6 +114,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     padding: 10,
+  },
+  streamingImg: {
+    height: 80,
+    width: 60,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
 

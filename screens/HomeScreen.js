@@ -11,6 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
+import RatingModal from "../components/modals/RatingModal";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
 
 const screenWidth = Dimensions.get("screen").width;

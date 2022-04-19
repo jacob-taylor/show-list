@@ -10,12 +10,14 @@ import {
 import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModal from "./modals/InfoModal";
+import RatingModal from "./modals/RatingModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
   const pressHandler = (press) => {
     setShowState((showState) =>
@@ -37,7 +39,12 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       }}
     >
       <View style={styles.checkBox}>
-        <TouchableOpacity onPress={() => pressHandler("checked")}>
+        <TouchableOpacity
+          onPress={() => pressHandler("checked")}
+          onLongPress={() => {
+            setRatingModalVisible(true);
+          }}
+        >
           <Ionicons
             name="checkmark"
             color={show.checked ? "black" : "white"}
@@ -101,6 +108,10 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
         info={show}
         onList={true}
         removeShowFromList={removeShowFromList}
+      />
+      <RatingModal
+        modalVisible={ratingModalVisible}
+        setModalVisible={setRatingModalVisible}
       />
     </TouchableOpacity>
   );

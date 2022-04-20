@@ -15,17 +15,15 @@ const screenHeight = Dimensions.get("screen").height;
 const SettingsScreen = () => {
   return (
     <View style={styles.topContainer}>
-      <View style={styles.profileContainer}>
-        <TouchableOpacity style={styles.btns}>
-          <Text>Push Notifications</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btns}>
-          <Text>My Favorites</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btns}>
-          <Text>Contact Us</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.btns}>
+        <Text>Push Notifications</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btns}>
+        <Text>My Favorites</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btns}>
+        <Text>Contact Us</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={[styles.btns, { position: "absolute" }]}>
         <Text>Log Out</Text>
       </TouchableOpacity>

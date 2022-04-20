@@ -18,8 +18,10 @@ const screenHeight = Dimensions.get("screen").height;
 const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
 
   const pressHandler = (press) => {
+    setRatingModalVisible(true);
     setShowState((showState) =>
       showState.map((show, i) => {
         if (showIndex === i) {
@@ -41,9 +43,12 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       <View style={styles.checkBox}>
         <TouchableOpacity
           onPress={() => pressHandler("checked")}
-          onLongPress={() => {
-            setRatingModalVisible(true);
-          }}
+
+          //Left this in just in case the longpress is a better choice
+          //For now the rating modal appears when the checkmark is pressed
+          // onLongPress={() => {
+          //   setRatingModalVisible(true);
+          // }}
         >
           <Ionicons
             name="checkmark"
@@ -112,6 +117,8 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       <RatingModal
         modalVisible={ratingModalVisible}
         setModalVisible={setRatingModalVisible}
+        rating={rating}
+        setRaiting={setRating}
       />
     </TouchableOpacity>
   );

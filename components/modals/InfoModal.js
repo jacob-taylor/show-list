@@ -8,12 +8,14 @@ import {
   Modal,
   Image,
   ScrollView,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   MOVIEDB_API_KEY,
   MOVIEDB_API_URL,
   MOVIEDB_POSTER_URL,
+  IMDB_URL,
 } from "../../constants";
 
 const screenWidth = Dimensions.get("screen").width;
@@ -26,8 +28,10 @@ const InfoModal = ({
   onList,
   addShowToList,
   removeShowFromList,
+  Linking,
 }) => {
   const [watchProviders, setWatchProviders] = useState({});
+  const [imdbLink, setImdbLink] = useState("");
 
   // TODO: Think about options for provider priority and ask client
   const DISPLAY_PRIORITY_CUTOFF = 36;
@@ -41,6 +45,14 @@ const InfoModal = ({
         .then((res) => {
           // TODO: Ask client about other countries for settings down the road
           if (res?.results?.US) setWatchProviders(res.results.US);
+        });
+
+      fetch(
+        `${MOVIEDB_API_URL}${info.media_type}/${info.id}/external_ids?api_key=${MOVIEDB_API_KEY}`
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          if (res?.imdb_id) setImdbLink(`${IMDB_URL}${res.imdb_id}`);
         });
     }
   }, [modalVisible]);
@@ -61,16 +73,23 @@ const InfoModal = ({
           <Ionicons name="close" color="white" size={30} />
         </TouchableOpacity>
         <View style={styles.container}>
-          <Image
-            source={
-              info.poster || info.backdrop
-                ? {
-                    uri: MOVIEDB_POSTER_URL + (info.backdrop || info.poster),
-                  }
-                : require("../../assets/empty-poster.png")
-            }
-            style={styles.streamingImg}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              console.log(imdbLink);
+              //Linking.openURL(imdbLink);
+            }}
+          >
+            <Image
+              source={
+                info.poster || info.backdrop
+                  ? {
+                      uri: MOVIEDB_POSTER_URL + (info.backdrop || info.poster),
+                    }
+                  : require("../../assets/empty-poster.png")
+              }
+              style={styles.streamingImg}
+            />
+          </TouchableOpacity>
           <Text
             style={{ fontSize: 38, fontWeight: "bold", textAlign: "center" }}
           >

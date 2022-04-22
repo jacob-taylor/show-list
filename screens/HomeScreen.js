@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
@@ -82,51 +83,53 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Image
-        source={require("../assets/theatre-bg-10.png")}
-        style={{
-          position: "absolute",
-          top: 0,
-        }}
-      />
-      {searchState.length === 0 ? (
-        <Image
-          source={require("../assets/title.png")}
-          style={{ height: screenHeight * 0.15, width: screenWidth * 0.9 }}
-        />
-      ) : null}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={{ width: "80%" }}
-          placeholder="Search for a Movie or Series..."
-          value={searchState}
-          onChangeText={(newText) => searchHandler(newText)}
-        />
-        <Ionicons name="search-outline" size={30} />
+    <ImageBackground
+      source={require("../assets/theatre-bg.png")}
+      style={{
+        flex: 1,
+      }}
+    >
+      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.2)" }}>
+        <SafeAreaView style={styles.container}>
+          {searchState.length === 0 ? (
+            <Image
+              source={require("../assets/title.png")}
+              style={{ height: screenHeight * 0.15, width: screenWidth * 0.9 }}
+            />
+          ) : null}
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={{ width: "80%" }}
+              placeholder="Search for a Movie or Series..."
+              value={searchState}
+              onChangeText={(newText) => searchHandler(newText)}
+            />
+            <Ionicons name="search-outline" size={30} />
+          </View>
+          <ScrollView>
+            {showState.map((show, index) => (
+              <ShowCard
+                key={index}
+                showIndex={index}
+                show={show}
+                setShowState={setShowState}
+                removeShowFromList={removeShowFromList}
+              />
+            ))}
+          </ScrollView>
+          {searchState.length > 0 ? (
+            <SearchResults resState={resState} addShowToList={addShowToList} />
+          ) : null}
+        </SafeAreaView>
       </View>
-      <ScrollView>
-        {showState.map((show, index) => (
-          <ShowCard
-            key={index}
-            showIndex={index}
-            show={show}
-            setShowState={setShowState}
-            removeShowFromList={removeShowFromList}
-          />
-        ))}
-      </ScrollView>
-      {searchState.length > 0 ? (
-        <SearchResults resState={resState} addShowToList={addShowToList} />
-      ) : null}
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     alignItems: "center",
   },
   searchContainer: {

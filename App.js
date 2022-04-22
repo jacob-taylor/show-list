@@ -5,8 +5,34 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./screens/LoginScreen";
+import { createContext } from "react";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const AppContext = createContext({
+  isloggedIn: {},
+  setLoggedIn: () => {},
+});
+
+const StackScreen = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerTitle: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="Main"
+        component={TabScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 const TabScreen = () => {
   return (
@@ -34,7 +60,11 @@ const TabScreen = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 };
@@ -42,7 +72,7 @@ const TabScreen = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <TabScreen />
+      <StackScreen />
     </NavigationContainer>
   );
 }

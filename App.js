@@ -1,34 +1,64 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+
+// React Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+// Redux
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider, useSelector } from "react-redux";
+import { persistStore, persistReducer } from "redux-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistGate } from "redux-persist/integration/react";
+import ReduxThunk from "redux-thunk";
+
+// Reducers
+import userReducer from "./state/reducers/user";
+
+// Components
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
-import { createContext } from "react";
+
+import { Ionicons } from "@expo/vector-icons";
+
+const rootReducer = combineReducers({
+  user: userReducer,
+});
+
+// Middleware: Redux Persist Config
+const persistConfig = {
+  // Root
+  key: "root",
+  // Storage Method (React Native)
+  storage: AsyncStorage,
+  // Whitelist (Save Specific Reducers)
+  whitelist: ["user"],
+  // Blacklist (Don't Save Specific Reducers)
+  blacklist: [],
+};
+
+// Middleware: Redux Persist Persisted Reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = createStore(persistedReducer, applyMiddleware(ReduxThunk));
+// const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
+// Middleware: Redux Persist Persister
+const persistor = persistStore(store);
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const AppContext = createContext({
-  isloggedIn: {},
-  setLoggedIn: () => {},
-});
-
-const StackScreen = () => {
+const LoginStackScreen = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{ headerTitle: "", headerTransparent: true }}
-      />
-      <Stack.Screen
-        name="Main"
-        component={TabScreen}
-        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -69,11 +99,23 @@ const TabScreen = () => {
   );
 };
 
-export default function App() {
+const App = () => {
+  const user = useSelector((state) => state.user);
+
   return (
     <NavigationContainer>
-      <StackScreen />
+      {user.loggedIn ? <TabScreen /> : <LoginStackScreen />}
     </NavigationContainer>
+  );
+};
+
+export default function AppWrapper() {
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
   );
 }
 

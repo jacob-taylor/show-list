@@ -9,6 +9,8 @@ import {
   ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { logOut } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -16,6 +18,8 @@ const screenHeight = Dimensions.get("screen").height;
 // maybe find icons for each selection
 
 const SettingsScreen = () => {
+  const dispatch = useDispatch();
+
   return (
     <ImageBackground
       source={require("../assets/settings-bg.png")}
@@ -38,7 +42,12 @@ const SettingsScreen = () => {
           <TouchableOpacity style={styles.btn}>
             <Text>Contact Us</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.btn, { position: "absolute" }]}>
+          <TouchableOpacity
+            style={[styles.btn, { position: "absolute" }]}
+            onPress={() => {
+              dispatch(logOut());
+            }}
+          >
             <Text>Log Out</Text>
           </TouchableOpacity>
         </SafeAreaView>

@@ -10,12 +10,16 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import { CURTAIN_RED } from "../constants";
+import { fetchLogin } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const LoginScreen = () => {
+  const dispatch = useDispatch();
+
   return (
     <ImageBackground
       source={require("../assets/login-bg-2.png")}
@@ -58,7 +62,12 @@ const LoginScreen = () => {
               <TextInput style={styles.txtInput} />
             </View>
           </KeyboardAvoidingView>
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => {
+              dispatch(fetchLogin());
+            }}
+          >
             <Text style={{ color: "white" }}>Login</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

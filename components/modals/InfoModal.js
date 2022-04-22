@@ -28,7 +28,6 @@ const InfoModal = ({
   onList,
   addShowToList,
   removeShowFromList,
-  Linking,
 }) => {
   const [watchProviders, setWatchProviders] = useState({});
   const [imdbLink, setImdbLink] = useState("");
@@ -75,8 +74,9 @@ const InfoModal = ({
         <View style={styles.container}>
           <TouchableOpacity
             onPress={() => {
-              console.log(imdbLink);
-              //Linking.openURL(imdbLink);
+              Linking.openURL(imdbLink).catch((err) =>
+                console.error("An error has occured", err)
+              );
             }}
           >
             <Image

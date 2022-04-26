@@ -21,7 +21,10 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
   const [rating, setRating] = useState(0);
 
   const pressHandler = (press) => {
-    setRatingModalVisible(true);
+    if (press === "checked") {
+      setRatingModalVisible(true);
+    }
+
     setShowState((showState) =>
       showState.map((show, i) => {
         if (showIndex === i) {

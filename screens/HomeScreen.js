@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
+import AddShowModal from "../components/modals/AddShowModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -24,6 +25,7 @@ const HomeScreen = () => {
   const [showState, setShowState] = useState([]);
   const [searchState, setSearchState] = useState(initialSearchState);
   const [resState, setResState] = useState(initialResState);
+  const [addShowModalVisible, setAddShowModalVisible] = useState(false);
 
   useEffect(() => {
     if (searchState) {
@@ -37,7 +39,9 @@ const HomeScreen = () => {
         .then((response) => response.json())
         .then((res) => {
           if (res.results.length === 0)
-            return setResState([{ title: "No Results Found", id: 0 }]);
+            return setResState([
+              { title: "No Results Found (Press To Add Info)", id: 0 },
+            ]);
           const resInfo = res.results
             .map((show) => {
               const info = {};
@@ -118,9 +122,19 @@ const HomeScreen = () => {
             ))}
           </ScrollView>
           {searchState.length > 0 ? (
-            <SearchResults resState={resState} addShowToList={addShowToList} />
+            <SearchResults
+              resState={resState}
+              addShowToList={addShowToList}
+              addShowModalVisible={addShowModalVisible}
+              setAddShowModalVisible={setAddShowModalVisible}
+            />
           ) : null}
         </SafeAreaView>
+        <AddShowModal
+          modalVisible={addShowModalVisible}
+          setModalVisible={setAddShowModalVisible}
+          addShowToList={addShowToList}
+        />
       </View>
     </ImageBackground>
   );

@@ -23,12 +23,18 @@ const SearchResults = ({ resState, addShowToList }) => {
       <TouchableOpacity
         style={styles.result}
         onPress={() => {
-          addShowToList(item);
+          if (item.id === 0) {
+          } else {
+            addShowToList(item);
+          }
         }}
         onLongPress={() => {
-          setInfoModalVisible(true);
+          if (item.id === 0) {
+            setInfoModalVisible(true);
+          } else {
+            //What to add here?
+          }
         }}
-        disabled={item.id === 0}
       >
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text numberOfLines={1} style={{ width: "75%" }}>

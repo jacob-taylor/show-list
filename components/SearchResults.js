@@ -31,13 +31,14 @@ const SearchResults = ({ resState, addShowToList }) => {
             addShowToList(item);
           }
         }}
-        onLongPress={() => {
-          if (item.id !== 0) {
-            setInfoModalVisible(true);
-          } else {
-            //What to add here?
-          }
-        }}
+        // onLongPress={() => {
+        //   // Probably getting rid of this
+        //   if (item.id !== 0) {
+        //     setInfoModalVisible(true);
+        //   } else {
+        //     //What to add here?
+        //   }
+        // }}
       >
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text numberOfLines={1} style={{ width: "75%" }}>

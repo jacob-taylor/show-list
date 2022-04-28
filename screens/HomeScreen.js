@@ -39,7 +39,7 @@ const HomeScreen = () => {
         .then((res) => {
           if (res.results.length === 0)
             return setResState([
-              { title: "No Results Found (Press To Add Info)", id: 0 },
+              { title: "No Results Found", id: 0, date: "(Press To Add Info)" },
             ]);
           const resInfo = res.results
             .map((show) => {

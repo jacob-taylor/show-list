@@ -1,6 +1,5 @@
 import {
   Image,
-  ImageBackground,
   StyleSheet,
   Text,
   TextInput,
@@ -21,58 +20,69 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
 
   return (
-    <ImageBackground
-      source={require("../assets/login-bg-2.png")}
-      style={{
-        flex: 1,
-      }}
-    >
+    <View style={{ flex: 1 }}>
+      <Image
+        source={require("../assets/login-bg-2.png")}
+        style={{
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          width: screenWidth,
+          height: screenHeight,
+        }}
+      />
       <View
         style={{
           flex: 1,
           backgroundColor: "rgba(0,0,0,0.2)",
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          width: screenWidth,
+          height: screenHeight,
         }}
+        pointerEvents="none"
+      ></View>
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <KeyboardAvoidingView
+        <Image
+          source={require("../assets/title.png")}
           style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            height: screenHeight * 0.15,
+            width: screenWidth * 0.9,
+            marginBottom: screenHeight * 0.05,
           }}
+        />
+        <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.inputContainer}
         >
-          <Image
-            source={require("../assets/title.png")}
-            style={{
-              height: screenHeight * 0.15,
-              width: screenWidth * 0.9,
-              marginBottom: screenHeight * 0.05,
-            }}
-          />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.inputContainer}
-          >
-            <View style={styles.textInputContainer}>
-              <Text style={styles.txt}>Email</Text>
-              <TextInput style={styles.txtInput} />
-            </View>
-            <View style={styles.textInputContainer}>
-              <Text style={styles.txt}>Password</Text>
-              <TextInput style={styles.txtInput} />
-            </View>
-          </KeyboardAvoidingView>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => {
-              dispatch(fetchLogin());
-            }}
-          >
-            <Text style={{ color: "white" }}>Login</Text>
-          </TouchableOpacity>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.txt}>Email</Text>
+            <TextInput style={styles.txtInput} />
+          </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.txt}>Password</Text>
+            <TextInput style={styles.txtInput} />
+          </View>
         </KeyboardAvoidingView>
-      </View>
-    </ImageBackground>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => {
+            dispatch(fetchLogin());
+          }}
+        >
+          <Text style={{ color: "white" }}>Login</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 

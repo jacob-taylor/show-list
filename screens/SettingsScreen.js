@@ -27,56 +27,72 @@ const SettingsScreen = () => {
     useState(false);
 
   return (
-    <ImageBackground
-      source={require("../assets/settings-bg.png")}
-      style={{
-        flex: 1,
-      }}
-    >
-      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.2)" }}>
-        <SafeAreaView style={styles.topContainer}>
-          <Image
-            source={require("../assets/settings-title.png")}
-            style={styles.title}
-          />
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              setNotificationModalVisible(true);
-            }}
-          >
-            <Text>Push Notifications</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              setFavoritesModalVisible(true);
-            }}
-          >
-            <Text>My Favorites</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn}>
-            <Text>Contact Us</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.btn, { position: "absolute" }]}
-            onPress={() => {
-              dispatch(logOut());
-            }}
-          >
-            <Text>Log Out</Text>
-          </TouchableOpacity>
-          <FavoritesModal
-            modalVisible={favoritesModalVisible}
-            setModalVisible={setFavoritesModalVisible}
-          />
-          <NotificationModal
-            modalVisible={notificationModalVisible}
-            setModalVisible={setNotificationModalVisible}
-          />
-        </SafeAreaView>
-      </View>
-    </ImageBackground>
+    <View style={{ flex: 1 }}>
+      <Image
+        source={require("../assets/settings-bg.png")}
+        style={{
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          width: screenWidth,
+          height: screenHeight,
+        }}
+      />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0,0,0,0.2)",
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          width: screenWidth,
+          height: screenHeight,
+        }}
+        pointerEvents="none"
+      ></View>
+      <SafeAreaView style={styles.topContainer}>
+        <Image
+          source={require("../assets/settings-title.png")}
+          style={styles.title}
+        />
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            setNotificationModalVisible(true);
+          }}
+        >
+          <Text>Push Notifications</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            setFavoritesModalVisible(true);
+          }}
+        >
+          <Text>My Favorites</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn}>
+          <Text>Contact Us</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.btn, { position: "absolute" }]}
+          onPress={() => {
+            dispatch(logOut());
+          }}
+        >
+          <Text>Log Out</Text>
+        </TouchableOpacity>
+        <FavoritesModal
+          modalVisible={favoritesModalVisible}
+          setModalVisible={setFavoritesModalVisible}
+        />
+        <NotificationModal
+          modalVisible={notificationModalVisible}
+          setModalVisible={setNotificationModalVisible}
+        />
+      </SafeAreaView>
+    </View>
   );
 };
 

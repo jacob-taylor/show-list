@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const AddShowModal = (modalVisible, setModalVisible, addShowToList) => {
+const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
   return (
     <Modal
       visible={modalVisible}
@@ -30,13 +30,13 @@ const AddShowModal = (modalVisible, setModalVisible, addShowToList) => {
           <Ionicons name="close" color="white" size={30} />
         </TouchableOpacity>
         <Image
-          source={"../../assets/empty-poster.png"}
+          source={require("../../assets/empty-poster.png")}
           style={styles.streamingImg}
         />
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: "#0044D0" }]}
           onPress={() => {
-            addShowToList(info);
+            //need to add user intput into "info" : addShowToList(info);
           }}
         >
           <Text style={{ color: "white", fontWeight: "bold" }}>

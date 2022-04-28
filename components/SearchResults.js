@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import InfoModal from "./modals/InfoModal";
+import AddShowModal from "./modals/AddShowModal";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const screenWidth = Dimensions.get("screen").width;
@@ -19,17 +20,19 @@ const screenHeight = Dimensions.get("screen").height;
 const SearchResults = ({ resState, addShowToList }) => {
   const Result = ({ item }) => {
     const [infoModalVisible, setInfoModalVisible] = useState(false);
+    const [addShowModalVisible, setAddShowModalVisible] = useState(false);
     return (
       <TouchableOpacity
         style={styles.result}
         onPress={() => {
           if (item.id === 0) {
+            setAddShowModalVisible(true);
           } else {
             addShowToList(item);
           }
         }}
         onLongPress={() => {
-          if (item.id === 0) {
+          if (item.id !== 0) {
             setInfoModalVisible(true);
           } else {
             //What to add here?
@@ -43,6 +46,11 @@ const SearchResults = ({ resState, addShowToList }) => {
           <Text>{item.media_type}</Text>
         </View>
         <Text>{item.date}</Text>
+        <AddShowModal
+          modalVisible={addShowModalVisible}
+          setModalVisible={setAddShowModalVisible}
+          addShowToList={addShowToList}
+        />
         <InfoModal
           modalVisible={infoModalVisible}
           setModalVisible={setInfoModalVisible}

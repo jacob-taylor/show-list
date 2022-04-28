@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +12,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { logOut } from "../state/actions/user";
+import NotificationModal from "../components/modals/NotificationModal";
+import FavoritesModal from "../components/modals/FavoritesModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -19,6 +22,9 @@ const screenHeight = Dimensions.get("screen").height;
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
+  const [favoritesModalVisible, setFavoritesModalVisible] = useState(false);
+  const [notificationModalVisible, setNotificationModalVisible] =
+    useState(false);
 
   return (
     <ImageBackground
@@ -33,10 +39,20 @@ const SettingsScreen = () => {
             source={require("../assets/settings-title.png")}
             style={styles.title}
           />
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              setNotificationModalVisible(true);
+            }}
+          >
             <Text>Push Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              setFavoritesModalVisible(true);
+            }}
+          >
             <Text>My Favorites</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn}>
@@ -50,6 +66,14 @@ const SettingsScreen = () => {
           >
             <Text>Log Out</Text>
           </TouchableOpacity>
+          <FavoritesModal
+            modalVisible={favoritesModalVisible}
+            setModalVisible={setFavoritesModalVisible}
+          />
+          <NotificationModal
+            modalVisible={notificationModalVisible}
+            setModalVisible={setNotificationModalVisible}
+          />
         </SafeAreaView>
       </View>
     </ImageBackground>

@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import AddShowModal from "../components/modals/AddShowModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -25,7 +24,6 @@ const HomeScreen = () => {
   const [showState, setShowState] = useState([]);
   const [searchState, setSearchState] = useState(initialSearchState);
   const [resState, setResState] = useState(initialResState);
-  const [addShowModalVisible, setAddShowModalVisible] = useState(false);
 
   useEffect(() => {
     if (searchState) {
@@ -122,19 +120,9 @@ const HomeScreen = () => {
             ))}
           </ScrollView>
           {searchState.length > 0 ? (
-            <SearchResults
-              resState={resState}
-              addShowToList={addShowToList}
-              addShowModalVisible={addShowModalVisible}
-              setAddShowModalVisible={setAddShowModalVisible}
-            />
+            <SearchResults resState={resState} addShowToList={addShowToList} />
           ) : null}
         </SafeAreaView>
-        <AddShowModal
-          modalVisible={addShowModalVisible}
-          setModalVisible={setAddShowModalVisible}
-          addShowToList={addShowToList}
-        />
       </View>
     </ImageBackground>
   );

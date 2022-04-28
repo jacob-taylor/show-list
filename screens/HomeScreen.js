@@ -89,7 +89,6 @@ const HomeScreen = () => {
     setSearchState(search);
   };
 
-  console.log("showState", showState);
   return (
     <View style={{ flex: 1 }}>
       <Image

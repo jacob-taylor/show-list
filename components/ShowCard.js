@@ -18,10 +18,9 @@ const screenHeight = Dimensions.get("screen").height;
 const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
-  const [rating, setRating] = useState(0);
 
   const pressHandler = (press) => {
-    if (press === "checked") {
+    if (press === "checked" && !show.checked) {
       setRatingModalVisible(true);
     }
 
@@ -60,7 +59,6 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
           />
         </TouchableOpacity>
       </View>
-      {/* Wrapped image and title together in a view */}
       <View style={{ flexDirection: "row" }}>
         <Image
           source={
@@ -120,8 +118,7 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       <RatingModal
         modalVisible={ratingModalVisible}
         setModalVisible={setRatingModalVisible}
-        rating={rating}
-        setRaiting={setRating}
+        show={show}
       />
     </TouchableOpacity>
   );
@@ -149,7 +146,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 10,
   },
-
   infoContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",

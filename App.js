@@ -21,6 +21,7 @@ import userReducer from "./state/reducers/user";
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import LoginScreen from "./screens/LoginScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -58,6 +59,11 @@ const LoginStackScreen = () => {
       <Stack.Screen
         name="Login"
         component={LoginScreen}
+        options={{ headerTitle: "", headerTransparent: true }}
+      />
+      <Stack.Screen
+        name="SignUp"
+        component={SignUpScreen}
         options={{ headerTitle: "", headerTransparent: true }}
       />
     </Stack.Navigator>

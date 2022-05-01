@@ -34,6 +34,36 @@ export const fetchLogin = (data) => {
   };
 };
 
+export const signUp = (data) => {
+  return async (dispatch) => {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      email: data.email,
+      password: data.password,
+    });
+
+    const response = await fetch(`${API_URL}/users`, {
+      method: "POST",
+      headers,
+      body,
+    });
+    const reponseData = await response.json();
+
+    if (response.ok) {
+      dispatch({
+        type: SET_LOGIN,
+        ...reponseData,
+      });
+    } else if (response.status === 400) {
+      Alert.alert(reponseData.error);
+    } else {
+      Alert.alert("Unable to Sign Up", "Please try again");
+    }
+  };
+};
+
 export const logOut = () => {
   return {
     type: LOG_OUT,

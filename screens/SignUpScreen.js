@@ -13,31 +13,49 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { CURTAIN_RED } from "../constants";
-import { fetchLogin } from "../state/actions/user";
+import { signUp } from "../state/actions/user";
+import { isEmailValid } from "../utils";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const LoginScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const formHandler = (field, value) => {
     setFormData((formData) => ({ ...formData, [field]: value }));
   };
 
-  const handleLogin = () => {
-    if (!formData.email && !formData.password) {
-      return Alert.alert("Please enter email and password");
+  const handleSignUp = () => {
+    if (!formData.email && !formData.password & !formData.confirmPassword) {
+      return Alert.alert("Please fill out form to sign up");
     }
     if (!formData.email) {
-      return Alert.alert("Please enter email to login");
+      return Alert.alert("Please enter Email");
+    }
+    if (!isEmailValid(formData.email)) {
+      return Alert.alert(
+        "Email not valid",
+        "Please enter a valid email to sign up"
+      );
     }
     if (!formData.password) {
-      return Alert.alert("Please enter password to login");
+      return Alert.alert("Please Enter Password");
     }
-    dispatch(fetchLogin(formData));
+    if (!formData.confirmPassword) {
+      return Alert.alert("Please Enter Confirm Password");
+    }
+    if (formData.password !== formData.confirmPassword) {
+      return Alert.alert("Password do not match", "Please try again");
+    }
+
+    dispatch(signUp(formData));
   };
 
   return (
@@ -94,17 +112,30 @@ const LoginScreen = ({ navigation }) => {
               }}
             />
           </View>
+          <View style={styles.textInputContainer}>
+            <Text style={styles.txt}>Confirm Password</Text>
+            <TextInput
+              style={styles.txtInput}
+              value={formData.confirmPassword}
+              autoCapitalize="none"
+              autoCompleteType="password"
+              secureTextEntry={true}
+              onChangeText={(text) => {
+                formHandler("confirmPassword", text);
+              }}
+            />
+          </View>
         </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={{ color: "white" }}>Login</Text>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
+          <Text style={{ color: "white" }}>Sign Up</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.signUpBtn}
           onPress={() => {
-            navigation.navigate("SignUp");
+            navigation.goBack();
           }}
         >
-          <Text style={{ color: CURTAIN_RED }}>Sign Up</Text>
+          <Text style={{ color: CURTAIN_RED }}>Login</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
@@ -180,4 +211,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;

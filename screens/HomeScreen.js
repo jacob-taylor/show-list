@@ -10,6 +10,7 @@ import {
   ImageBackground,
   Text,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
@@ -19,6 +20,8 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const HomeScreen = () => {
+  const user = useSelector((state) => state.user);
+
   const initialSearchState = "";
   const initialResState = [];
 

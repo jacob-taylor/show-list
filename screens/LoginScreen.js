@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { CURTAIN_RED } from "../constants";
@@ -22,22 +23,26 @@ const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   const formHandler = (field, value) => {
     setFormData((formData) => ({ ...formData, [field]: value }));
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    setLoading(true);
+
     if (!formData.email && !formData.password) {
-      return Alert.alert("Please enter email and password");
+      Alert.alert("Please enter email and password");
+    } else if (!formData.email) {
+      Alert.alert("Please enter email to login");
+    } else if (!formData.password) {
+      Alert.alert("Please enter password to login");
+    } else {
+      await dispatch(fetchLogin(formData));
     }
-    if (!formData.email) {
-      return Alert.alert("Please enter email to login");
-    }
-    if (!formData.password) {
-      return Alert.alert("Please enter password to login");
-    }
-    dispatch(fetchLogin(formData));
+
+    setLoading(false);
   };
 
   return (
@@ -95,9 +100,19 @@ const LoginScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={{ color: "white" }}>Login</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator
+            style={{
+              height: 50,
+            }}
+            color={CURTAIN_RED}
+            size="large"
+          />
+        ) : (
+          <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+            <Text style={{ color: "white" }}>Login</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.signUpBtn}
           onPress={() => {

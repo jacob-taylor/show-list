@@ -7,8 +7,6 @@ import {
   SafeAreaView,
   Image,
   Dimensions,
-  ImageBackground,
-  Text,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";

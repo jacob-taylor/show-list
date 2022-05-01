@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { CURTAIN_RED } from "../constants";
@@ -27,35 +28,32 @@ const SignUpScreen = ({ navigation }) => {
     password: "",
     confirmPassword: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const formHandler = (field, value) => {
     setFormData((formData) => ({ ...formData, [field]: value }));
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    setLoading(true);
+
     if (!formData.email && !formData.password & !formData.confirmPassword) {
-      return Alert.alert("Please fill out form to sign up");
-    }
-    if (!formData.email) {
-      return Alert.alert("Please enter Email");
-    }
-    if (!isEmailValid(formData.email)) {
-      return Alert.alert(
-        "Email not valid",
-        "Please enter a valid email to sign up"
-      );
-    }
-    if (!formData.password) {
-      return Alert.alert("Please Enter Password");
-    }
-    if (!formData.confirmPassword) {
-      return Alert.alert("Please Enter Confirm Password");
-    }
-    if (formData.password !== formData.confirmPassword) {
-      return Alert.alert("Password do not match", "Please try again");
+      Alert.alert("Please fill out form to sign up");
+    } else if (!formData.email) {
+      Alert.alert("Please enter Email");
+    } else if (!isEmailValid(formData.email)) {
+      Alert.alert("Email not valid", "Please enter a valid email to sign up");
+    } else if (!formData.password) {
+      Alert.alert("Please Enter Password");
+    } else if (!formData.confirmPassword) {
+      Alert.alert("Please Enter Confirm Password");
+    } else if (formData.password !== formData.confirmPassword) {
+      Alert.alert("Password do not match", "Please try again");
+    } else {
+      await dispatch(signUp(formData));
     }
 
-    dispatch(signUp(formData));
+    setLoading(false);
   };
 
   return (
@@ -126,9 +124,19 @@ const SignUpScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
-          <Text style={{ color: "white" }}>Sign Up</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator
+            style={{
+              height: 50,
+            }}
+            color={CURTAIN_RED}
+            size="large"
+          />
+        ) : (
+          <TouchableOpacity style={styles.loginBtn} onPress={handleSignUp}>
+            <Text style={{ color: "white" }}>Sign Up</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.signUpBtn}
           onPress={() => {

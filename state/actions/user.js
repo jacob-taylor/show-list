@@ -26,8 +26,8 @@ export const fetchLogin = (data) => {
         type: SET_LOGIN,
         ...reponseData,
       });
-    } else if (response.status === 404) {
-      Alert.alert("Email not found", "Please try again");
+    } else if (response.status === 400) {
+      Alert.alert(reponseData.error);
     } else {
       Alert.alert("Unable to Login", "Please try again");
     }

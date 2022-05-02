@@ -32,8 +32,9 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text>Enable Push Notifications</Text>
+          <Text style={{ fontWeight: "bold" }}>Enable Push Notifications</Text>
           <View style={styles.optionsView}>
+            <Text style={{ padding: 15, fontWeight: "bold" }}>ON</Text>
             <View style={styles.checkBox}>
               <TouchableOpacity onPress={() => pressHandler("on")}>
                 <Ionicons
@@ -43,9 +44,8 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text>ON</Text>
-          </View>
-          <View style={styles.optionsView}>
+
+            <Text style={{ padding: 15, fontWeight: "bold" }}>OFF</Text>
             <View style={styles.checkBox}>
               <TouchableOpacity onPress={() => pressHandler("off")}>
                 <Ionicons
@@ -55,7 +55,6 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text>OFF</Text>
           </View>
           <Button
             title="Close"
@@ -92,14 +91,15 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   optionsView: {
-    flexDirection: "column",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   checkBox: {
     borderRadius: 3,
     borderWidth: 1,
     marginRight: 10,
+    justifyContent: "center",
   },
 });
 

@@ -14,22 +14,26 @@ export const fetchLogin = (data) => {
       password: data.password,
     });
 
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers,
-      body,
-    });
-    const reponseData = await response.json();
-
-    if (response.ok) {
-      dispatch({
-        type: SET_LOGIN,
-        ...reponseData,
+    try {
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers,
+        body,
       });
-    } else if (response.status === 400) {
-      Alert.alert(reponseData.error);
-    } else {
-      Alert.alert("Unable to Login", "Please try again");
+      const reponseData = await response.json();
+
+      if (response.ok) {
+        dispatch({
+          type: SET_LOGIN,
+          ...reponseData,
+        });
+      } else if (response.status === 400) {
+        Alert.alert(reponseData.error);
+      } else {
+        Alert.alert("Unable to Login", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
     }
   };
 };
@@ -44,22 +48,26 @@ export const signUp = (data) => {
       password: data.password,
     });
 
-    const response = await fetch(`${API_URL}/users`, {
-      method: "POST",
-      headers,
-      body,
-    });
-    const reponseData = await response.json();
-
-    if (response.ok) {
-      dispatch({
-        type: SET_LOGIN,
-        ...reponseData,
+    try {
+      const response = await fetch(`${API_URL}/users`, {
+        method: "POST",
+        headers,
+        body,
       });
-    } else if (response.status === 400) {
-      Alert.alert(reponseData.error);
-    } else {
-      Alert.alert("Unable to Sign Up", "Please try again");
+      const reponseData = await response.json();
+
+      if (response.ok) {
+        dispatch({
+          type: SET_LOGIN,
+          ...reponseData,
+        });
+      } else if (response.status === 400) {
+        Alert.alert(reponseData.error);
+      } else {
+        Alert.alert("Unable to Sign Up", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
     }
   };
 };

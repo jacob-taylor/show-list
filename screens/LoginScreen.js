@@ -68,10 +68,7 @@ const LoginScreen = ({ navigation }) => {
             marginBottom: screenHeight * 0.05,
           }}
         />
-        <View
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.inputContainer}
-        >
+        <View style={styles.inputContainer}>
           <View style={styles.textInputContainer}>
             <Text style={styles.txt}>Email</Text>
             <TextInput
@@ -128,7 +125,7 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    width: "60%",
+    width: "70%",
     justifyContent: "center",
     alignItems: "center",
   },

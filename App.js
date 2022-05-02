@@ -24,6 +24,8 @@ import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 
 import { Ionicons } from "@expo/vector-icons";
+import { registerForPushNotificationsAsync } from "./utils";
+import { useEffect } from "react";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -107,6 +109,13 @@ const TabScreen = () => {
 
 const App = () => {
   const user = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (user.loggedIn) {
+      console.log("User logged in, running");
+      registerForPushNotificationsAsync();
+    }
+  }, [user.loggedIn]);
 
   return (
     <NavigationContainer>

@@ -6,3 +6,6 @@ export const MOVIEDB_API_KEY = "cf6fc6ad7bb9611671d2057e5ae1874b";
 export const IMDB_URL = "https://www.imdb.com/title/";
 
 export const CURTAIN_RED = "#a4110a";
+
+export const EMAIL_PATTERN =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

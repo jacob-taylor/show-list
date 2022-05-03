@@ -11,27 +11,30 @@ import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModal from "./modals/InfoModal";
 import RatingModal from "./modals/RatingModal";
+import { useSelector } from "react-redux";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
+const ShowCard = ({ show, showIndex, removeShowFromList }) => {
+  const initialCardState = {
+    checked: show.watched,
+    favorited: show.favorited,
+    reminded: !!show.reminder_date,
+  };
+  const [cardState, setCardState] = useState(initialCardState);
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
+  //TODO: Check for sent and return conditional before it gets to the card state better to wait until date picker working
   const pressHandler = (press) => {
-    if (press === "checked" && !show.checked) {
+    if (press === "checked" && !cardState.checked) {
       setRatingModalVisible(true);
     }
 
-    // setShowState((showState) =>
-    //   showState.map((show, i) => {
-    //     if (showIndex === i) {
-    //       return { ...show, [press]: !show[press] };
-    //     }
-    //     return show;
-    //   })
-    // );
+    setCardState((cardState) => {
+      return { ...cardState, [press]: !cardState[press] };
+    });
   };
 
   return (
@@ -54,7 +57,7 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
         >
           <Ionicons
             name="checkmark"
-            color={show.checked ? "black" : "white"}
+            color={cardState.checked ? "black" : "white"}
             size={32}
           />
         </TouchableOpacity>
@@ -92,7 +95,7 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       >
         <TouchableOpacity onPress={() => pressHandler("favorited")}>
           <Ionicons
-            name={show.favorited ? "heart" : "heart-outline"}
+            name={cardState.favorited ? "heart" : "heart-outline"}
             color="red"
             size={28}
           />
@@ -102,7 +105,7 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => pressHandler("reminded")}>
           <Ionicons
-            name={show.reminded ? "alarm" : "alarm-outline"}
+            name={cardState.reminded ? "alarm" : "alarm-outline"}
             color="blue"
             size={28}
           />

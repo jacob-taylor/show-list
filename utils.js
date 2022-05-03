@@ -22,7 +22,7 @@ export const registerForPushNotificationsAsync = async () => {
     // TODO: Make API request to make sure Push notification token is saved to user
     // this.setState({ expoPushToken: token });
   } else {
-    alert("Must use physical device for Push Notifications");
+    // alert("Must use physical device for Push Notifications");
   }
 
   if (Platform.OS === "android") {

@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import { addShow, ADD_SHOW } from "../state/actions/user";
+import { addShow, ADD_SHOW, logOut, removeShow } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -88,6 +88,7 @@ const HomeScreen = () => {
 
   const removeShowFromList = (show) => {
     //setShowState((showState) => showState.filter((s) => s.id !== show.id));
+    dispatch(removeShow(show));
   };
 
   const searchHandler = (search) => {

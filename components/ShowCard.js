@@ -11,8 +11,8 @@ import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import InfoModal from "./modals/InfoModal";
 import RatingModal from "./modals/RatingModal";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useSelector } from "react-redux";
-import DatePicker from "react-native-date-picker";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -29,12 +29,15 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
+  const onDateChange = (selectedDate) => {
+    setPickerVisible(false);
+    setReminderDate(selectedDate);
+  };
+
   //TODO: Check for sent and return conditional before it gets to the card state better to wait until date picker working
   const pressHandler = (press) => {
     if (press === "checked" && !cardState.checked) {
       setRatingModalVisible(true);
-    } else if (press === "reminded") {
-      setPickerVisible(true);
     }
 
     setCardState((cardState) => {
@@ -82,7 +85,6 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
           <Text numberOfLines={1}>{show.date}</Text>
         </View>
       </View>
-
       <View
         style={{
           flexDirection: "row",
@@ -100,9 +102,7 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
         <TouchableOpacity onPress={() => pressHandler("sent")}>
           <Ionicons name="send" color="orange" size={28} />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setPickerVisible(true) /*pressHandler("reminded")*/}
-        >
+        <TouchableOpacity onPress={() => setPickerVisible(true)}>
           <Ionicons
             name={cardState.reminded ? "alarm" : "alarm-outline"}
             color="blue"
@@ -122,14 +122,11 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
         setModalVisible={setRatingModalVisible}
         show={show}
       />
-      <DatePicker
-        modal
-        open={pickerVisible}
+      <DateTimePickerModal
+        isVisible={pickerVisible}
+        mode="date"
         date={reminderDate}
-        onConfirm={(date) => {
-          setPickerVisible(false);
-          setReminderDate(date);
-        }}
+        onConfirm={onDateChange}
         onCancel={() => {
           setPickerVisible(false);
         }}

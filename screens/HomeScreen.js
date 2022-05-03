@@ -8,22 +8,25 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
+import { addShow, ADD_SHOW } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const showList = user.show_list;
 
   const initialSearchState = "";
   const initialResState = [];
 
-  const [showState, setShowState] = useState([]);
+  //const [showState, setShowState] = useState([]);
   const [searchState, setSearchState] = useState(initialSearchState);
   const [resState, setResState] = useState(initialResState);
 
@@ -66,7 +69,7 @@ const HomeScreen = () => {
 
               return info;
             })
-            .filter((show) => !showState.map((s) => s.id).includes(show.id))
+            .filter((show) => !showList.map((s) => s.id).includes(show.id))
             .filter((show) => show.media_type !== "person");
 
           setResState(resInfo);
@@ -77,13 +80,14 @@ const HomeScreen = () => {
   }, [searchState]);
 
   const addShowToList = (show) => {
-    setShowState((showState) => [...showState, show]);
+    //setShowState((showState) => [...showState, show]);
+    dispatch(addShow(show));
     setResState([]);
     setSearchState("");
   };
 
   const removeShowFromList = (show) => {
-    setShowState((showState) => showState.filter((s) => s.id !== show.id));
+    //setShowState((showState) => showState.filter((s) => s.id !== show.id));
   };
 
   const searchHandler = (search) => {
@@ -132,12 +136,11 @@ const HomeScreen = () => {
           <Ionicons name="search-outline" size={30} />
         </View>
         <ScrollView>
-          {showState.map((show, index) => (
+          {showList.map((show, index) => (
             <ShowCard
               key={index}
               showIndex={index}
               show={show}
-              setShowState={setShowState}
               removeShowFromList={removeShowFromList}
             />
           ))}

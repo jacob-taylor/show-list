@@ -3,6 +3,7 @@ import { API_URL } from "../../constants";
 
 export const SET_LOGIN = "SET_LOGIN";
 export const LOG_OUT = "LOG_OUT";
+export const ADD_SHOW = "ADD_SHOW";
 
 export const fetchLogin = (data) => {
   return async (dispatch) => {
@@ -76,4 +77,8 @@ export const logOut = () => {
   return {
     type: LOG_OUT,
   };
+};
+
+export const addShow = (data) => {
+  return { type: ADD_SHOW, data };
 };

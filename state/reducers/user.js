@@ -1,4 +1,4 @@
-import { LOG_OUT, SET_LOGIN } from "../actions/user";
+import { ADD_SHOW, LOG_OUT, SET_LOGIN } from "../actions/user";
 
 // App wide user state
 const initialUserState = {
@@ -21,6 +21,8 @@ const userReducer = (state = initialUserState, action) => {
       };
     case LOG_OUT:
       return initialUserState;
+    case ADD_SHOW:
+      return { ...state, show_list: [...state.show_list, action.data] };
     default:
       return state;
   }

@@ -24,14 +24,14 @@ const ShowCard = ({ show, setShowState, showIndex, removeShowFromList }) => {
       setRatingModalVisible(true);
     }
 
-    setShowState((showState) =>
-      showState.map((show, i) => {
-        if (showIndex === i) {
-          return { ...show, [press]: !show[press] };
-        }
-        return show;
-      })
-    );
+    // setShowState((showState) =>
+    //   showState.map((show, i) => {
+    //     if (showIndex === i) {
+    //       return { ...show, [press]: !show[press] };
+    //     }
+    //     return show;
+    //   })
+    // );
   };
 
   return (

@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import InfoModal from "./modals/InfoModal";
 import RatingModal from "./modals/RatingModal";
 import { useSelector } from "react-redux";
+import DatePicker from "react-native-date-picker";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -23,6 +24,8 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
     reminded: !!show.reminder_date,
   };
   const [cardState, setCardState] = useState(initialCardState);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [reminderDate, setReminderDate] = useState(new Date());
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
@@ -30,6 +33,8 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
   const pressHandler = (press) => {
     if (press === "checked" && !cardState.checked) {
       setRatingModalVisible(true);
+    } else if (press === "reminded") {
+      setPickerVisible(true);
     }
 
     setCardState((cardState) => {
@@ -46,15 +51,7 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
       }}
     >
       <View style={styles.checkBox}>
-        <TouchableOpacity
-          onPress={() => pressHandler("checked")}
-
-          //Left this in just in case the longpress is a better choice
-          //For now the rating modal appears when the checkmark is pressed
-          // onLongPress={() => {
-          //   setRatingModalVisible(true);
-          // }}
-        >
+        <TouchableOpacity onPress={() => pressHandler("checked")}>
           <Ionicons
             name="checkmark"
             color={cardState.checked ? "black" : "white"}
@@ -103,7 +100,9 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
         <TouchableOpacity onPress={() => pressHandler("sent")}>
           <Ionicons name="send" color="orange" size={28} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressHandler("reminded")}>
+        <TouchableOpacity
+          onPress={() => setPickerVisible(true) /*pressHandler("reminded")*/}
+        >
           <Ionicons
             name={cardState.reminded ? "alarm" : "alarm-outline"}
             color="blue"
@@ -122,6 +121,18 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
         modalVisible={ratingModalVisible}
         setModalVisible={setRatingModalVisible}
         show={show}
+      />
+      <DatePicker
+        modal
+        open={pickerVisible}
+        date={reminderDate}
+        onConfirm={(date) => {
+          setPickerVisible(false);
+          setReminderDate(date);
+        }}
+        onCancel={() => {
+          setPickerVisible(false);
+        }}
       />
     </TouchableOpacity>
   );

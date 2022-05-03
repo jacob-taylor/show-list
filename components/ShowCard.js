@@ -19,9 +19,9 @@ const screenHeight = Dimensions.get("screen").height;
 
 const ShowCard = ({ show, showIndex, removeShowFromList }) => {
   const initialCardState = {
-    checked: show.watched,
-    favorited: show.favorited,
-    reminded: !!show.reminder_date,
+    // checked: show.watched,
+    // favorited: show.favorited,
+    // reminded: !!show.reminder_date,
   };
   const [cardState, setCardState] = useState(initialCardState);
   const [pickerVisible, setPickerVisible] = useState(false);

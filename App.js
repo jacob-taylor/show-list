@@ -1,4 +1,4 @@
-import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 // React Navigation
@@ -8,7 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Redux
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useSelector, useDispatch } from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistGate } from "redux-persist/integration/react";
@@ -16,6 +16,9 @@ import ReduxThunk from "redux-thunk";
 
 // Reducers
 import userReducer from "./state/reducers/user";
+
+// Actions
+import { fetchShows } from "./state/actions/user";
 
 // Components
 import HomeScreen from "./screens/HomeScreen";
@@ -25,7 +28,6 @@ import SignUpScreen from "./screens/SignUpScreen";
 
 import { Ionicons } from "@expo/vector-icons";
 import { registerForPushNotificationsAsync } from "./utils";
-import { useEffect } from "react";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -108,12 +110,14 @@ const TabScreen = () => {
 };
 
 const App = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
     if (user.loggedIn) {
       console.log("User logged in, running");
       registerForPushNotificationsAsync();
+      dispatch(fetchShows());
     }
   }, [user.loggedIn]);
 

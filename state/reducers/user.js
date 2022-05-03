@@ -1,4 +1,10 @@
-import { ADD_SHOW, LOG_OUT, REMOVE_SHOW, SET_LOGIN } from "../actions/user";
+import {
+  ADD_SHOW,
+  LOG_OUT,
+  REMOVE_SHOW,
+  SET_LOGIN,
+  SET_SHOWS,
+} from "../actions/user";
 
 // App wide user state
 const initialUserState = {
@@ -21,6 +27,11 @@ const userReducer = (state = initialUserState, action) => {
       };
     case LOG_OUT:
       return initialUserState;
+    case SET_SHOWS:
+      return {
+        ...state,
+        show_list: action.data,
+      };
     case ADD_SHOW:
       return { ...state, show_list: [...state.show_list, action.data] };
     case REMOVE_SHOW:

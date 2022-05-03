@@ -3,6 +3,7 @@ import { API_URL } from "../../constants";
 
 export const SET_LOGIN = "SET_LOGIN";
 export const LOG_OUT = "LOG_OUT";
+export const SET_SHOWS = "SET_SHOWS";
 export const ADD_SHOW = "ADD_SHOW";
 export const REMOVE_SHOW = "REMOVE_SHOW";
 export const EDIT_SHOW = "EDIT_SHOW";
@@ -81,8 +82,40 @@ export const logOut = () => {
   };
 };
 
+export const fetchShows = () => {
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/shows`, {
+        method: "GET",
+        headers,
+      });
+
+      const responseData = await response.json();
+      console.log("responseData", responseData);
+      if (response.ok) {
+        dispatch({
+          type: SET_SHOWS,
+          data: responseData.show_list,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to add show", "Please try again");
+      } else {
+        Alert.alert("Unable to add show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+};
+
 export const addShow = (data) => {
-  //return { type: ADD_SHOW, data };
   return async (dispatch, getState) => {
     const { token } = getState().user;
 
@@ -100,9 +133,6 @@ export const addShow = (data) => {
         headers,
         body,
       });
-
-      console.log("This is the body: ", body);
-      console.log("This is response: ", response.ok);
 
       if (response.ok) {
         dispatch({

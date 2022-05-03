@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import { addShow, ADD_SHOW, logOut, removeShow } from "../state/actions/user";
+import { addShow, removeShow } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -21,12 +21,12 @@ const screenHeight = Dimensions.get("screen").height;
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  console.log("user", user);
   const showList = user.show_list;
 
   const initialSearchState = "";
   const initialResState = [];
 
-  //const [showState, setShowState] = useState([]);
   const [searchState, setSearchState] = useState(initialSearchState);
   const [resState, setResState] = useState(initialResState);
 
@@ -66,6 +66,9 @@ const HomeScreen = () => {
                   : show.first_air_date
                   ? show.first_air_date.split("-")[0]
                   : "";
+              info.favorited = false;
+              info.watched = false;
+              info.rating = 0;
 
               return info;
             })

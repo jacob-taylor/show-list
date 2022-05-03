@@ -82,7 +82,42 @@ export const logOut = () => {
 };
 
 export const addShow = (data) => {
-  return { type: ADD_SHOW, data };
+  //return { type: ADD_SHOW, data };
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      token,
+      show: data,
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/shows`, {
+        method: "POST",
+        headers,
+        body,
+      });
+
+      console.log("This is the body: ", body);
+      console.log("This is response: ", response.ok);
+
+      if (response.ok) {
+        dispatch({
+          type: ADD_SHOW,
+          data,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to add show", "Please try again");
+      } else {
+        Alert.alert("Unable to add show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
 };
 
 export const removeShow = (data) => {

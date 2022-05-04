@@ -14,6 +14,7 @@ import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
 import { addShow, removeShow } from "../state/actions/user";
+import InfoModal from "../components/modals/InfoModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -21,7 +22,6 @@ const screenHeight = Dimensions.get("screen").height;
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  console.log("user", user);
   const showList = user.show_list;
 
   const initialSearchState = "";
@@ -29,6 +29,8 @@ const HomeScreen = () => {
 
   const [searchState, setSearchState] = useState(initialSearchState);
   const [resState, setResState] = useState(initialResState);
+  const [selectedShow, setSelectedShow] = useState();
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   useEffect(() => {
     if (searchState) {
@@ -82,16 +84,10 @@ const HomeScreen = () => {
     }
   }, [searchState]);
 
-  const addShowToList = (show) => {
-    //setShowState((showState) => [...showState, show]);
-    dispatch(addShow(show));
+  const addShowToList = async (show) => {
+    await dispatch(addShow(show));
     setResState([]);
     setSearchState("");
-  };
-
-  const removeShowFromList = (show) => {
-    //setShowState((showState) => showState.filter((s) => s.id !== show.id));
-    dispatch(removeShow(show));
   };
 
   const searchHandler = (search) => {
@@ -145,7 +141,10 @@ const HomeScreen = () => {
               key={index}
               showIndex={index}
               show={show}
-              removeShowFromList={removeShowFromList}
+              cardPressHandler={() => {
+                setSelectedShow(show);
+                setInfoModalVisible(true);
+              }}
             />
           ))}
         </ScrollView>
@@ -153,6 +152,14 @@ const HomeScreen = () => {
           <SearchResults resState={resState} addShowToList={addShowToList} />
         ) : null}
       </SafeAreaView>
+      {infoModalVisible ? (
+        <InfoModal
+          modalVisible={infoModalVisible}
+          setModalVisible={setInfoModalVisible}
+          info={selectedShow}
+          onList={true}
+        />
+      ) : null}
     </View>
   );
 };

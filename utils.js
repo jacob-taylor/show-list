@@ -18,7 +18,6 @@ export const registerForPushNotificationsAsync = async () => {
       return;
     }
     const token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
     // TODO: Make API request to make sure Push notification token is saved to user
     // this.setState({ expoPushToken: token });
   } else {

@@ -8,6 +8,7 @@ import {
   Modal,
   Image,
   ScrollView,
+  ActivityIndicator,
   Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +17,10 @@ import {
   MOVIEDB_API_URL,
   MOVIEDB_POSTER_URL,
   IMDB_URL,
+  CURTAIN_RED,
 } from "../../constants";
+import { useDispatch } from "react-redux";
+import { removeShow } from "../../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -27,10 +31,12 @@ const InfoModal = ({
   info,
   onList,
   addShowToList,
-  removeShowFromList,
 }) => {
+  const dispatch = useDispatch();
+
   const [watchProviders, setWatchProviders] = useState({});
   const [imdbLink, setImdbLink] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // TODO: Think about options for provider priority and ask client
   const DISPLAY_PRIORITY_CUTOFF = 36;
@@ -55,6 +61,24 @@ const InfoModal = ({
         });
     }
   }, [modalVisible]);
+
+  const removeShowFromList = async () => {
+    setLoading(true);
+
+    await dispatch(removeShow(info));
+
+    setLoading(false);
+    setModalVisible(false);
+  };
+
+  const addShowHandler = async () => {
+    setLoading(true);
+
+    await addShowToList(info);
+
+    setLoading(false);
+    setModalVisible(false);
+  };
 
   return (
     <Modal
@@ -180,23 +204,36 @@ const InfoModal = ({
               : null}
           </ScrollView>
           {onList ? (
-            <TouchableOpacity
-              style={[styles.btn, { backgroundColor: "#a4161a" }]}
-              onPress={() => {
-                removeShowFromList(info);
-                setModalVisible(false);
+            loading ? (
+              <ActivityIndicator
+                style={{
+                  height: 40,
+                }}
+                color={CURTAIN_RED}
+                size="large"
+              />
+            ) : (
+              <TouchableOpacity
+                style={[styles.btn, { backgroundColor: "#a4161a" }]}
+                onPress={removeShowFromList}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Remove from List
+                </Text>
+              </TouchableOpacity>
+            )
+          ) : loading ? (
+            <ActivityIndicator
+              style={{
+                height: 40,
               }}
-            >
-              <Text style={{ color: "white", fontWeight: "bold" }}>
-                Remove from List
-              </Text>
-            </TouchableOpacity>
+              color="#0044D0"
+              size="large"
+            />
           ) : (
             <TouchableOpacity
               style={[styles.btn, { backgroundColor: "#0044D0" }]}
-              onPress={() => {
-                addShowToList(info);
-              }}
+              onPress={addShowHandler}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Add to List

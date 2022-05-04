@@ -17,16 +17,15 @@ import { useSelector } from "react-redux";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const ShowCard = ({ show, showIndex, removeShowFromList }) => {
+const ShowCard = ({ show, cardPressHandler }) => {
   const initialCardState = {
-    // checked: show.watched,
-    // favorited: show.favorited,
-    // reminded: !!show.reminder_date,
+    checked: show?.watched,
+    favorited: show?.favorited,
+    reminded: !!show?.reminder_date,
   };
   const [cardState, setCardState] = useState(initialCardState);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [reminderDate, setReminderDate] = useState(new Date());
-  const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
   const onDateChange = (selectedDate) => {
@@ -49,9 +48,7 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.85}
-      onPress={() => {
-        setInfoModalVisible(true);
-      }}
+      onPress={cardPressHandler}
     >
       <View style={styles.checkBox}>
         <TouchableOpacity onPress={() => pressHandler("checked")}>
@@ -110,13 +107,6 @@ const ShowCard = ({ show, showIndex, removeShowFromList }) => {
           />
         </TouchableOpacity>
       </View>
-      <InfoModal
-        modalVisible={infoModalVisible}
-        setModalVisible={setInfoModalVisible}
-        info={show}
-        onList={true}
-        removeShowFromList={removeShowFromList}
-      />
       <RatingModal
         modalVisible={ratingModalVisible}
         setModalVisible={setRatingModalVisible}

@@ -115,7 +115,7 @@ const App = () => {
 
   useEffect(() => {
     if (user.loggedIn) {
-      console.log("User logged in, running");
+      console.log("User logged in, running startup jobs");
       registerForPushNotificationsAsync();
       dispatch(fetchShows());
     }

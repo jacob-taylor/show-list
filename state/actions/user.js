@@ -98,7 +98,7 @@ export const fetchShows = () => {
       });
 
       const responseData = await response.json();
-      console.log("responseData", responseData);
+
       if (response.ok) {
         dispatch({
           type: SET_SHOWS,
@@ -151,7 +151,38 @@ export const addShow = (data) => {
 };
 
 export const removeShow = (data) => {
-  return { type: REMOVE_SHOW, data };
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      token,
+      show: data,
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/shows`, {
+        method: "DELETE",
+        headers,
+        body,
+      });
+
+      if (response.ok) {
+        dispatch({
+          type: REMOVE_SHOW,
+          data,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to remove show", "Please try again");
+      } else {
+        Alert.alert("Unable to remove show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
 };
 
 export const editShow = (data) => {

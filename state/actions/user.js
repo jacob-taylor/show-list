@@ -121,9 +121,9 @@ export const addShow = (data) => {
 
     const headers = {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     };
     const body = JSON.stringify({
-      token,
       show: data,
     });
 
@@ -156,9 +156,9 @@ export const removeShow = (data) => {
 
     const headers = {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     };
     const body = JSON.stringify({
-      token,
       show: data,
     });
 
@@ -186,5 +186,36 @@ export const removeShow = (data) => {
 };
 
 export const editShow = (data) => {
-  return { type: EDIT_SHOW, data };
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const body = JSON.stringify({
+      show: data,
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/shows`, {
+        method: "PATCH",
+        headers,
+        body,
+      });
+
+      if (response.ok) {
+        dispatch({
+          type: EDIT_SHOW,
+          data,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to edit show", "Please try again");
+      } else {
+        Alert.alert("Unable to edit show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
 };

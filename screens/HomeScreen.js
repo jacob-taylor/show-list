@@ -23,6 +23,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const showList = user.show_list;
+  console.log(showList.map((s) => s.id));
 
   const initialSearchState = "";
   const initialResState = [];

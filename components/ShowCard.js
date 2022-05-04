@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,40 +9,80 @@ import {
 } from "react-native";
 import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
-import InfoModal from "./modals/InfoModal";
 import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { editShow } from "../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const ShowCard = ({ show, cardPressHandler }) => {
+  const dispatch = useDispatch();
+
   const initialCardState = {
-    checked: show?.watched,
+    watched: show?.watched,
     favorited: show?.favorited,
-    reminded: !!show?.reminder_date,
+    reminder_date: show?.reminder_date,
+    rating: show?.rating,
   };
+
   const [cardState, setCardState] = useState(initialCardState);
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [reminderDate, setReminderDate] = useState(new Date());
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
+
+  const isCardStateEqual = () => {
+    return (
+      initialCardState.favorited === cardState.favorited &&
+      initialCardState.watched === cardState.watched &&
+      initialCardState.reminder_date === cardState.reminder_date &&
+      initialCardState.rating === cardState.rating
+    );
+  };
+
+  useEffect(() => {
+    if (!isCardStateEqual()) {
+      dispatch(
+        editShow({
+          id: show.id,
+          ...cardState,
+        })
+      );
+    }
+  }, [cardState]);
 
   const onDateChange = (selectedDate) => {
     setPickerVisible(false);
-    setReminderDate(selectedDate);
+    setCardState((cardState) => ({
+      ...cardState,
+      reminder_date: selectedDate,
+    }));
   };
 
-  //TODO: Check for sent and return conditional before it gets to the card state better to wait until date picker working
-  const pressHandler = (press) => {
-    if (press === "checked" && !cardState.checked) {
+  const watchedHandler = () => {
+    if (!cardState.watched) {
       setRatingModalVisible(true);
     }
+    setCardState((cardState) => ({
+      ...cardState,
+      watched: !cardState.watched,
+    }));
+  };
 
+  const favoriteHandler = () => {
     setCardState((cardState) => {
-      return { ...cardState, [press]: !cardState[press] };
+      return { ...cardState, favorited: !cardState.favorited };
     });
   };
+
+  const ratingHandler = (num) => {
+    setCardState((cardState) => ({
+      ...cardState,
+      rating: num,
+    }));
+  };
+
+  const sendHandler = () => {};
 
   return (
     <TouchableOpacity
@@ -51,10 +91,10 @@ const ShowCard = ({ show, cardPressHandler }) => {
       onPress={cardPressHandler}
     >
       <View style={styles.checkBox}>
-        <TouchableOpacity onPress={() => pressHandler("checked")}>
+        <TouchableOpacity onPress={watchedHandler}>
           <Ionicons
             name="checkmark"
-            color={cardState.checked ? "black" : "white"}
+            color={cardState.watched ? "black" : "white"}
             size={32}
           />
         </TouchableOpacity>
@@ -89,19 +129,23 @@ const ShowCard = ({ show, cardPressHandler }) => {
           justifyContent: "space-between",
         }}
       >
-        <TouchableOpacity onPress={() => pressHandler("favorited")}>
+        <TouchableOpacity onPress={favoriteHandler}>
           <Ionicons
             name={cardState.favorited ? "heart" : "heart-outline"}
             color="red"
             size={28}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressHandler("sent")}>
+        <TouchableOpacity onPress={sendHandler}>
           <Ionicons name="send" color="orange" size={28} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setPickerVisible(true)}>
           <Ionicons
-            name={cardState.reminded ? "alarm" : "alarm-outline"}
+            name={
+              new Date(Date.parse(cardState.reminder_date)) > new Date()
+                ? "alarm"
+                : "alarm-outline"
+            }
             color="blue"
             size={28}
           />
@@ -111,11 +155,17 @@ const ShowCard = ({ show, cardPressHandler }) => {
         modalVisible={ratingModalVisible}
         setModalVisible={setRatingModalVisible}
         show={show}
+        cardState={cardState}
+        ratingHandler={ratingHandler}
       />
       <DateTimePickerModal
         isVisible={pickerVisible}
         mode="date"
-        date={reminderDate}
+        date={
+          cardState.reminder_date
+            ? new Date(Date.parse(cardState.reminder_date))
+            : new Date()
+        }
         onConfirm={onDateChange}
         onCancel={() => {
           setPickerVisible(false);

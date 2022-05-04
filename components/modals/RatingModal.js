@@ -15,12 +15,13 @@ import { Ionicons } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const RatingModal = ({ modalVisible, setModalVisible, show }) => {
+const RatingModal = ({
+  modalVisible,
+  setModalVisible,
+  show,
+  ratingHandler,
+}) => {
   const [rating, setRating] = useState(0);
-
-  const pressHandler = async (num) => {
-    setRating(num);
-  };
 
   return (
     <Modal
@@ -59,35 +60,35 @@ const RatingModal = ({ modalVisible, setModalVisible, show }) => {
               width: "100%",
             }}
           >
-            <TouchableOpacity onPress={() => pressHandler(1)} activeOpacity={1}>
+            <TouchableOpacity onPress={() => setRating(1)} activeOpacity={1}>
               <Ionicons
                 name={rating >= 1 ? "star" : "star-outline"}
                 color="#ffc107"
                 size={45}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => pressHandler(2)} activeOpacity={1}>
+            <TouchableOpacity onPress={() => setRating(2)} activeOpacity={1}>
               <Ionicons
                 name={rating >= 2 ? "star" : "star-outline"}
                 color="#ffc107"
                 size={45}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => pressHandler(3)} activeOpacity={1}>
+            <TouchableOpacity onPress={() => setRating(3)} activeOpacity={1}>
               <Ionicons
                 name={rating >= 3 ? "star" : "star-outline"}
                 color="#ffc107"
                 size={45}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => pressHandler(4)} activeOpacity={1}>
+            <TouchableOpacity onPress={() => setRating(4)} activeOpacity={1}>
               <Ionicons
                 name={rating >= 4 ? "star" : "star-outline"}
                 color="#ffc107"
                 size={45}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => pressHandler(5)} activeOpacity={1}>
+            <TouchableOpacity onPress={() => setRating(5)} activeOpacity={1}>
               <Ionicons
                 name={rating >= 5 ? "star" : "star-outline"}
                 color="#ffc107"
@@ -98,6 +99,7 @@ const RatingModal = ({ modalVisible, setModalVisible, show }) => {
           <Button
             title="Rate"
             onPress={() => {
+              ratingHandler(rating);
               setModalVisible(false);
             }}
           />

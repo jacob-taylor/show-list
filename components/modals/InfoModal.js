@@ -75,9 +75,6 @@ const InfoModal = ({
     setLoading(true);
 
     await addShowToList(info);
-
-    setLoading(false);
-    setModalVisible(false);
   };
 
   return (

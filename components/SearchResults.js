@@ -32,6 +32,14 @@ const SearchResults = ({ resState, addShowToList }) => {
             await addShowToList(item);
           }
         }}
+        onLongPress={() => {
+          // Probably getting rid of this
+          if (item.id !== 0) {
+            setInfoModalVisible(true);
+          } else {
+            //What to add here?
+          }
+        }}
       >
         <View
           style={styles.result}
@@ -104,8 +112,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 10,
-    height: screenHeight * 0.065,
-    width: screenWidth * 0.75,
+    height: 54,
+    width: 279,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -116,8 +124,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    height: screenHeight * 0.065,
-    width: screenWidth * 0.75,
+    height: 54,
+    width: 279,
     backgroundColor: "rgba(0,0,0,0.2)",
     justifyContent: "center",
     alignItems: "center",

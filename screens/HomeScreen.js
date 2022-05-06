@@ -23,7 +23,8 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const showList = user.show_list;
-  console.log(showList.map((s) => s.id));
+
+  // console.log(showList);
 
   const initialSearchState = "";
   const initialResState = [];
@@ -137,17 +138,19 @@ const HomeScreen = () => {
           <Ionicons name="search-outline" size={30} />
         </View>
         <ScrollView>
-          {showList.map((show, index) => (
-            <ShowCard
-              key={index}
-              showIndex={index}
-              show={show}
-              cardPressHandler={() => {
-                setSelectedShow(show);
-                setInfoModalVisible(true);
-              }}
-            />
-          ))}
+          {showList
+            // .filter((s) => !s.watched)
+            .map((show, index) => (
+              <ShowCard
+                key={index}
+                showIndex={index}
+                show={show}
+                cardPressHandler={() => {
+                  setSelectedShow(show);
+                  setInfoModalVisible(true);
+                }}
+              />
+            ))}
         </ScrollView>
         {searchState.length > 0 ? (
           <SearchResults resState={resState} addShowToList={addShowToList} />

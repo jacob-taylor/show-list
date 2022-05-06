@@ -1,5 +1,6 @@
 import {
   ADD_SHOW,
+  EDIT_SHOW,
   LOG_OUT,
   REMOVE_SHOW,
   SET_LOGIN,
@@ -34,6 +35,16 @@ const userReducer = (state = initialUserState, action) => {
       };
     case ADD_SHOW:
       return { ...state, show_list: [...state.show_list, action.data] };
+    case EDIT_SHOW:
+      return {
+        ...state,
+        show_list: state.show_list.map((s) => {
+          if (s._id === action.data._id) {
+            return action.data;
+          }
+          return s;
+        }),
+      };
     case REMOVE_SHOW:
       return {
         ...state,

@@ -73,6 +73,9 @@ const SettingsScreen = () => {
           <Text>My Favorites</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn}>
+          <Text>Previously Watched</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn}>
           <Text>Contact Us</Text>
         </TouchableOpacity>
         <TouchableOpacity

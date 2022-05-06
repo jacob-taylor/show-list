@@ -21,13 +21,13 @@ const ShowCard = ({ show, cardPressHandler }) => {
   const dispatch = useDispatch();
 
   const initialCardState = {
-    watched: show?.watched,
     favorited: show?.favorited,
     reminder_date: show?.reminder_date,
     rating: show?.rating,
   };
 
   const [cardState, setCardState] = useState(initialCardState);
+  const [watchedState, setWatchedState] = useState(show?.watched);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
@@ -42,16 +42,30 @@ const ShowCard = ({ show, cardPressHandler }) => {
 
   useEffect(() => {
     if (!isCardStateEqual()) {
+      console.log("Something changed, editing show", show.title);
       dispatch(
         editShow({
-          id: show.id,
+          _id: show._id,
           ...cardState,
         })
       );
     }
   }, [cardState]);
 
+  useEffect(() => {
+    if (show && !watchedState && cardState.rating !== 0) {
+      console.log("watchedState changed, editing show", show.title);
+      dispatch(
+        editShow({
+          _id: show._id,
+          watched: watchedState,
+        })
+      );
+    }
+  }, [watchedState]);
+
   const onDateChange = (selectedDate) => {
+    console.log("selectedDate", selectedDate);
     setPickerVisible(false);
     setCardState((cardState) => ({
       ...cardState,
@@ -60,13 +74,10 @@ const ShowCard = ({ show, cardPressHandler }) => {
   };
 
   const watchedHandler = () => {
-    if (!cardState.watched) {
+    if (!watchedState) {
       setRatingModalVisible(true);
     }
-    setCardState((cardState) => ({
-      ...cardState,
-      watched: !cardState.watched,
-    }));
+    setWatchedState(!watchedState);
   };
 
   const favoriteHandler = () => {
@@ -79,11 +90,15 @@ const ShowCard = ({ show, cardPressHandler }) => {
     setCardState((cardState) => ({
       ...cardState,
       rating: num,
+      watched: !cardState.watched,
     }));
   };
 
   const sendHandler = () => {};
 
+  if (!show) {
+    return <View></View>;
+  }
   return (
     <TouchableOpacity
       style={styles.container}
@@ -94,7 +109,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
         <TouchableOpacity onPress={watchedHandler}>
           <Ionicons
             name="checkmark"
-            color={cardState.watched ? "black" : "white"}
+            color={watchedState ? "black" : "white"}
             size={32}
           />
         </TouchableOpacity>
@@ -102,7 +117,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
       <View style={{ flexDirection: "row" }}>
         <Image
           source={
-            show.poster || show.backdrop
+            show?.poster || show?.backdrop
               ? {
                   uri: MOVIEDB_POSTER_URL + (show.poster || show.backdrop),
                 }

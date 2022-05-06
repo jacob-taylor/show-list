@@ -135,9 +135,11 @@ export const addShow = (data) => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+
         dispatch({
           type: ADD_SHOW,
-          data,
+          data: responseData.show,
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to add show", "Please try again");
@@ -205,9 +207,11 @@ export const editShow = (data) => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+
         dispatch({
           type: EDIT_SHOW,
-          data,
+          data: responseData.show,
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to edit show", "Please try again");

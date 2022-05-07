@@ -8,13 +8,14 @@ import {
   Image,
   Dimensions,
   Keyboard,
+  RefreshControl,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import SearchResults from "../components/SearchResults";
 import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import { addShow, removeShow } from "../state/actions/user";
+import { addShow, fetchShows, removeShow } from "../state/actions/user";
 import InfoModal from "../components/modals/InfoModal";
 
 const screenWidth = Dimensions.get("screen").width;
@@ -32,6 +33,7 @@ const HomeScreen = () => {
   const [resState, setResState] = useState(initialResState);
   const [selectedShow, setSelectedShow] = useState();
   const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (searchState) {
@@ -96,6 +98,18 @@ const HomeScreen = () => {
     setSearchState(search);
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    dispatch(fetchShows())
+      .then(() => {
+        setRefreshing(false);
+      })
+      .catch((err) => {
+        setRefreshing(false);
+        console.log(err);
+      });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Image
@@ -138,7 +152,11 @@ const HomeScreen = () => {
           />
           <Ionicons name="search-outline" size={30} />
         </View>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {showList
             // .filter((s) => !s.watched)
             .map((show, index) => (

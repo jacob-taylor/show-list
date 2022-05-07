@@ -101,19 +101,19 @@ export const fetchShows = () => {
         headers,
       });
 
-      const responseData = await response.json();
-
       if (response.ok) {
+        const responseData = await response.json();
+
         dispatch({
           type: SET_SHOWS,
           data: responseData.show_list,
         });
       } else if (response.status === 400) {
-        Alert.alert("Unable to add show", "Please try again");
+        throw new Error(reponseData?.error);
       } else if (response.status === 401) {
         dispatch(logOut());
       } else {
-        Alert.alert("Unable to add show", "Please try again");
+        Alert.alert("Unable to get shows", "Please try again");
       }
     } catch (err) {
       Alert.alert(err.message);

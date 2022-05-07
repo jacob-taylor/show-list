@@ -32,7 +32,12 @@ export const registerForPushNotificationsAsync = async () => {
   return token;
 };
 
-export const getDateWithNoTime = () => {
-  const date = new Date();
+export const getDateWithNoTime = (date = new Date()) => {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
+export const convertTimestampFromUTC = (timestamp) => {
+  const date = new Date(timestamp);
+  // Adding timezoneOffest removes UTC
+  return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
 };

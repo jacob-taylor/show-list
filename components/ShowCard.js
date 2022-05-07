@@ -13,6 +13,7 @@ import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useDispatch } from "react-redux";
 import { editShow } from "../state/actions/user";
+import { getDateWithNoTime } from "../utils";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -179,7 +180,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
         date={
           cardState.reminder_date
             ? new Date(Date.parse(cardState.reminder_date))
-            : new Date()
+            : getDateWithNoTime()
         }
         onConfirm={onDateChange}
         onCancel={() => {

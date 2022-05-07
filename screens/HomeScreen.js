@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,9 +23,7 @@ const screenHeight = Dimensions.get("screen").height;
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const showList = user.show_list;
-
-  // console.log(showList);
+  const showList = user.show_list || [];
 
   const initialSearchState = "";
   const initialResState = [];
@@ -90,6 +89,7 @@ const HomeScreen = () => {
     await dispatch(addShow(show));
     setResState([]);
     setSearchState("");
+    Keyboard.dismiss();
   };
 
   const searchHandler = (search) => {
@@ -130,8 +130,9 @@ const HomeScreen = () => {
         ) : null}
         <View style={styles.searchContainer}>
           <TextInput
-            style={{ width: "80%" }}
+            style={{ width: "80%", height: "100%" }}
             placeholder="Search for a Movie or Series..."
+            placeholderTextColor="gray"
             value={searchState}
             onChangeText={(newText) => searchHandler(newText)}
           />

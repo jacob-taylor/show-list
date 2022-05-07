@@ -38,22 +38,41 @@ const SignUpScreen = ({ navigation }) => {
     setLoading(true);
 
     if (!formData.email && !formData.password & !formData.confirmPassword) {
-      Alert.alert("Please fill out form to sign up");
-    } else if (!formData.email) {
-      Alert.alert("Please enter Email");
-    } else if (!isEmailValid(formData.email)) {
-      Alert.alert("Email not valid", "Please enter a valid email to sign up");
-    } else if (!formData.password) {
-      Alert.alert("Please Enter Password");
-    } else if (!formData.confirmPassword) {
-      Alert.alert("Please Enter Confirm Password");
-    } else if (formData.password !== formData.confirmPassword) {
-      Alert.alert("Password do not match", "Please try again");
-    } else {
-      await dispatch(signUp(formData));
+      setLoading(false);
+      return Alert.alert("Please fill out form to sign up");
     }
 
-    setLoading(false);
+    if (!formData.email) {
+      setLoading(false);
+      return Alert.alert("Please enter Email");
+    }
+
+    if (!isEmailValid(formData.email)) {
+      setLoading(false);
+      return Alert.alert(
+        "Email not valid",
+        "Please enter a valid email to sign up"
+      );
+    }
+
+    if (!formData.password) {
+      setLoading(false);
+      return Alert.alert("Please Enter Password");
+    }
+
+    if (!formData.confirmPassword) {
+      setLoading(false);
+      return Alert.alert("Please Enter Confirm Password");
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setLoading(false);
+      return Alert.alert("Password do not match", "Please try again");
+    }
+
+    dispatch(signUp(formData)).catch((err) => {
+      setLoading(false);
+    });
   };
 
   return (

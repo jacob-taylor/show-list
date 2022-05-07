@@ -1,4 +1,5 @@
-export const API_URL = "http://localhost:3000/api";
+// * When running local API use "http://localhost:3000/api";
+export const API_URL = "https://shrouded-fjord-41573.herokuapp.com/api";
 
 export const MOVIEDB_POSTER_URL = "https://image.tmdb.org/t/p/original";
 export const MOVIEDB_API_URL = "https://api.themoviedb.org/3/";

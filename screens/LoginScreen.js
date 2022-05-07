@@ -31,18 +31,9 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     setLoading(true);
-
-    if (!formData.email && !formData.password) {
-      Alert.alert("Please enter email and password");
-    } else if (!formData.email) {
-      Alert.alert("Please enter email to login");
-    } else if (!formData.password) {
-      Alert.alert("Please enter password to login");
-    } else {
-      await dispatch(fetchLogin(formData));
-    }
-
-    setLoading(false);
+    await dispatch(fetchLogin(formData)).catch((err) => {
+      setLoading(false);
+    });
   };
 
   return (

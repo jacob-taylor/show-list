@@ -32,12 +32,14 @@ export const fetchLogin = (data) => {
           ...reponseData,
         });
       } else if (response.status === 400) {
-        Alert.alert(reponseData.error);
+        throw new Error(reponseData?.error);
       } else {
         Alert.alert("Unable to Login", "Please try again");
+        throw new Error("Unexpected Error");
       }
     } catch (err) {
-      Alert.alert(err.message);
+      Alert.alert(err?.message);
+      throw new Error(err?.message);
     }
   };
 };
@@ -66,12 +68,14 @@ export const signUp = (data) => {
           ...reponseData,
         });
       } else if (response.status === 400) {
-        Alert.alert(reponseData.error);
+        throw new Error(reponseData?.error);
       } else {
         Alert.alert("Unable to Sign Up", "Please try again");
+        throw new Error("Unexpected error");
       }
     } catch (err) {
-      Alert.alert(err.message);
+      Alert.alert(err?.message);
+      throw new Error(err?.message);
     }
   };
 };

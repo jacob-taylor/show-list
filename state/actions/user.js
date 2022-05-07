@@ -110,6 +110,8 @@ export const fetchShows = () => {
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to add show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
       } else {
         Alert.alert("Unable to add show", "Please try again");
       }
@@ -147,6 +149,8 @@ export const addShow = (data) => {
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to add show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
       } else {
         Alert.alert("Unable to add show", "Please try again");
       }
@@ -182,6 +186,8 @@ export const removeShow = (data) => {
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to remove show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
       } else {
         Alert.alert("Unable to remove show", "Please try again");
       }
@@ -219,6 +225,8 @@ export const editShow = (data) => {
         });
       } else if (response.status === 400) {
         Alert.alert("Unable to edit show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
       } else {
         Alert.alert("Unable to edit show", "Please try again");
       }

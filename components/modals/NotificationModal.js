@@ -7,20 +7,60 @@ import {
   Dimensions,
   Modal,
   Button,
+  Alert,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { editUser } from "../../state/actions/user";
+import { registerForPushNotificationsAsync } from "../../utils";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const NotificationModal = ({ modalVisible, setModalVisible }) => {
-  const [notifications, setNotifications] = useState({ on: true, off: false });
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+
+  const [notifications, setNotifications] = useState(user?.push_notifications);
+
   const pressHandler = (press) => {
-    if (press === "on") {
-      setNotifications({ yes: !notifications.on });
-    } else if (press === "off") {
-      setNotifications({ no: !notifications.off });
+    setNotifications(press === "on");
+  };
+
+  const onSave = async () => {
+    const pushToken = notifications
+      ? await registerForPushNotificationsAsync()
+      : "";
+
+    if (notifications && !pushToken) {
+      setNotifications(false);
+      return Alert.alert(
+        "Unable to turn on Push Notifications",
+        "To turn on Push notifications, enable in device permissions",
+        [
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Linking.openSettings();
+            },
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
     }
+
+    const editUserBody = {
+      push_notifications: notifications,
+      push_token: pushToken,
+    };
+    await dispatch(editUser(editUserBody));
+
+    setModalVisible(false);
   };
 
   return (
@@ -32,14 +72,16 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={{ fontWeight: "bold" }}>Enable Push Notifications</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+            Enable Push Notifications
+          </Text>
           <View style={styles.optionsView}>
             <Text style={{ padding: 15, fontWeight: "bold" }}>ON</Text>
             <View style={styles.checkBox}>
               <TouchableOpacity onPress={() => pressHandler("on")}>
                 <Ionicons
                   name="checkmark"
-                  color={notifications.yes ? "black" : "white"}
+                  color={notifications ? "black" : "white"}
                   size={32}
                 />
               </TouchableOpacity>
@@ -50,18 +92,13 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
               <TouchableOpacity onPress={() => pressHandler("off")}>
                 <Ionicons
                   name="checkmark"
-                  color={notifications.no ? "black" : "white"}
+                  color={!notifications ? "black" : "white"}
                   size={32}
                 />
               </TouchableOpacity>
             </View>
           </View>
-          <Button
-            title="Close"
-            onPress={() => {
-              setModalVisible(false);
-            }}
-          />
+          <Button title="Save" onPress={onSave} />
         </View>
       </View>
     </Modal>
@@ -79,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     backgroundColor: "white",
-    height: screenHeight * 0.2,
+    height: screenHeight * 0.25,
     width: screenWidth * 0.75,
     borderColor: "black",
     // borderWidth: 1,

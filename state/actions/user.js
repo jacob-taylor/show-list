@@ -3,6 +3,7 @@ import { API_URL } from "../../constants";
 
 export const SET_LOGIN = "SET_LOGIN";
 export const LOG_OUT = "LOG_OUT";
+export const EDIT_USER = "EDIT_USER";
 export const SET_SHOWS = "SET_SHOWS";
 export const ADD_SHOW = "ADD_SHOW";
 export const REMOVE_SHOW = "REMOVE_SHOW";
@@ -76,6 +77,50 @@ export const signUp = (data) => {
     } catch (err) {
       Alert.alert(err?.message);
       throw new Error(err?.message);
+    }
+  };
+};
+
+export const editUser = (data) => {
+  return async (dispatch, getState) => {
+    const { token, streaming_services, push_token, push_notifications } =
+      getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    const currentUserData = {
+      streaming_services,
+      push_token,
+      push_notifications,
+    };
+    const body = JSON.stringify({ ...currentUserData, ...data });
+
+    try {
+      const response = await fetch(`${API_URL}/users`, {
+        method: "PATCH",
+        headers,
+        body,
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        dispatch({
+          type: EDIT_USER,
+          ...responseData,
+        });
+      } else if (response.status === 400) {
+        throw new Error(reponseData?.error);
+      } else if (response.status === 401) {
+        dispatch(logOut());
+      } else {
+        Alert.alert("Unable to edit user profile", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
     }
   };
 };

@@ -5,6 +5,7 @@ import { EMAIL_PATTERN } from "./constants";
 export const isEmailValid = (email) => EMAIL_PATTERN.test(email);
 
 export const registerForPushNotificationsAsync = async () => {
+  let token;
   if (Device.isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
@@ -14,14 +15,9 @@ export const registerForPushNotificationsAsync = async () => {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
       return;
     }
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    // TODO: Make API request to make sure Push notification token is saved to user
-    // this.setState({ expoPushToken: token });
-  } else {
-    // alert("Must use physical device for Push Notifications");
+    token = (await Notifications.getExpoPushTokenAsync()).data;
   }
 
   if (Platform.OS === "android") {
@@ -32,6 +28,8 @@ export const registerForPushNotificationsAsync = async () => {
       lightColor: "#FF231F7C",
     });
   }
+
+  return token;
 };
 
 export const getDateWithNoTime = () => {

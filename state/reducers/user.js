@@ -5,6 +5,7 @@ import {
   REMOVE_SHOW,
   SET_LOGIN,
   SET_SHOWS,
+  EDIT_USER,
 } from "../actions/user";
 
 // App wide user state
@@ -15,6 +16,8 @@ const initialUserState = {
   show_list: [],
   streaming_services: [],
   email: "",
+  push_token: "",
+  push_notifications: true,
 };
 
 const userReducer = (state = initialUserState, action) => {
@@ -28,6 +31,11 @@ const userReducer = (state = initialUserState, action) => {
       };
     case LOG_OUT:
       return initialUserState;
+    case EDIT_USER:
+      return {
+        ...state,
+        ...action.data,
+      };
     case SET_SHOWS:
       return {
         ...state,

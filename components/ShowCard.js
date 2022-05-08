@@ -13,7 +13,6 @@ import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useDispatch } from "react-redux";
 import { editShow } from "../state/actions/user";
-import { convertTimestampFromUTC, getDateWithNoTime } from "../utils";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -66,17 +65,12 @@ const ShowCard = ({ show, cardPressHandler }) => {
   }, [watchedState]);
 
   const onDateChange = (selectedDate) => {
-    const selectedDateNoTime = getDateWithNoTime(selectedDate);
-
-    // Subtracting timezoneOffset brings it to UTC
-    const selectedDateUTCTimestamp =
-      selectedDateNoTime.getTime() -
-      selectedDateNoTime.getTimezoneOffset() * 60000;
+    console.log("selectedDate", selectedDate);
 
     setPickerVisible(false);
     setCardState((cardState) => ({
       ...cardState,
-      reminder_date: selectedDateUTCTimestamp,
+      reminder_date: selectedDate,
     }));
   };
 
@@ -164,8 +158,8 @@ const ShowCard = ({ show, cardPressHandler }) => {
         <TouchableOpacity onPress={() => setPickerVisible(true)}>
           <Ionicons
             name={
-              convertTimestampFromUTC(cardState.reminder_date) >=
-              getDateWithNoTime()
+              new Date(Date.parse(cardState.reminder_date)).getDate() >=
+              new Date().getDate()
                 ? "alarm"
                 : "alarm-outline"
             }
@@ -186,8 +180,8 @@ const ShowCard = ({ show, cardPressHandler }) => {
         mode="date"
         date={
           cardState.reminder_date
-            ? convertTimestampFromUTC(cardState.reminder_date)
-            : getDateWithNoTime()
+            ? new Date(Date.parse(cardState.reminder_date))
+            : new Date()
         }
         onConfirm={onDateChange}
         onCancel={() => {

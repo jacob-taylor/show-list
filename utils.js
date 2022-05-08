@@ -31,3 +31,14 @@ export const registerForPushNotificationsAsync = async () => {
 
   return token;
 };
+
+export const parseDateUsingCurrentHour = (date) => {
+  const currentDate = new Date();
+  const parsedDate = new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    currentDate.getUTCHours() - currentDate.getTimezoneOffset() / 60
+  );
+  return parsedDate;
+};

@@ -13,6 +13,7 @@ import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useDispatch } from "react-redux";
 import { editShow } from "../state/actions/user";
+import { parseDateUsingCurrentHour } from "../utils";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -65,12 +66,12 @@ const ShowCard = ({ show, cardPressHandler }) => {
   }, [watchedState]);
 
   const onDateChange = (selectedDate) => {
-    console.log("selectedDate", selectedDate);
+    console.log(parseDateUsingCurrentHour(selectedDate));
 
     setPickerVisible(false);
     setCardState((cardState) => ({
       ...cardState,
-      reminder_date: selectedDate,
+      reminder_date: parseDateUsingCurrentHour(selectedDate), // Needed because the datepicker will select a new date with the previously (first) selected time
     }));
   };
 
@@ -158,7 +159,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
         <TouchableOpacity onPress={() => setPickerVisible(true)}>
           <Ionicons
             name={
-              new Date(Date.parse(cardState.reminder_date)).getDate() >=
+              new Date(cardState.reminder_date).getDate() >=
               new Date().getDate()
                 ? "alarm"
                 : "alarm-outline"
@@ -180,7 +181,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
         mode="date"
         date={
           cardState.reminder_date
-            ? new Date(Date.parse(cardState.reminder_date))
+            ? new Date(cardState.reminder_date)
             : new Date()
         }
         onConfirm={onDateChange}

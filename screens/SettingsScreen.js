@@ -8,6 +8,7 @@ import {
   Image,
   SafeAreaView,
   ImageBackground,
+  Linking,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
@@ -75,7 +76,12 @@ const SettingsScreen = () => {
         <TouchableOpacity style={styles.btn}>
           <Text>Previously Watched</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            Linking.openURL("mailto:info@thelistnow.com");
+          }}
+        >
           <Text>Contact Us</Text>
         </TouchableOpacity>
         <TouchableOpacity

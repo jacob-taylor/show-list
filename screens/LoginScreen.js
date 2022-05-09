@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useDispatch } from "react-redux";
+import ForgotPasswordModal from "../components/modals/ForgotPasswordModal";
 import { CURTAIN_RED } from "../constants";
 import { fetchLogin } from "../state/actions/user";
 
@@ -24,6 +25,8 @@ const LoginScreen = ({ navigation }) => {
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordModalVisible, setForgotPasswordModalVisible] =
+    useState(false);
 
   const formHandler = (field, value) => {
     setFormData((formData) => ({ ...formData, [field]: value }));
@@ -60,7 +63,7 @@ const LoginScreen = ({ navigation }) => {
           }}
         />
         <View style={styles.inputContainer}>
-          <View style={styles.textInputContainer}>
+          <View style={[styles.textInputContainer, { marginBottom: 30 }]}>
             <Text style={styles.txt}>Email</Text>
             <TextInput
               style={styles.txtInput}
@@ -77,7 +80,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.textInputContainer}>
             <Text style={styles.txt}>Password</Text>
             <TextInput
-              style={styles.txtInput}
+              style={[styles.txtInput, { marginBottom: 15 }]}
               value={formData.password}
               autoCapitalize="none"
               autoCompleteType="password"
@@ -88,6 +91,22 @@ const LoginScreen = ({ navigation }) => {
             />
           </View>
         </View>
+        <TouchableOpacity
+          style={{ marginBottom: 30 }}
+          onPress={() => {
+            setForgotPasswordModalVisible(true);
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              alignSelf: "center",
+            }}
+          >
+            Forget Password?
+          </Text>
+        </TouchableOpacity>
         {loading ? (
           <ActivityIndicator
             style={{
@@ -110,6 +129,10 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{ color: CURTAIN_RED }}>Sign Up</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
+      <ForgotPasswordModal
+        modalVisible={forgotPasswordModalVisible}
+        setModalVisible={setForgotPasswordModalVisible}
+      />
     </View>
   );
 };
@@ -122,7 +145,6 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     width: "100%",
-    marginBottom: 30,
   },
   txt: {
     color: "white",

@@ -28,14 +28,16 @@ const FavoritesModal = ({ modalVisible, setModalVisible }) => {
       animationType="slide"
       presentationStyle="pageSheet"
     >
-      <TouchableOpacity
-        onPress={() => {
-          setModalVisible(false);
-        }}
-        style={styles.closeBtn}
-      >
-        <Ionicons name="close" color="white" size={30} />
-      </TouchableOpacity>
+      <View style={{ padding: 20 }}>
+        <TouchableOpacity
+          onPress={() => {
+            setModalVisible(false);
+          }}
+          style={styles.closeBtn}
+        >
+          <Ionicons name="close" color="white" size={30} />
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 };

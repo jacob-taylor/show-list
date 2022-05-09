@@ -127,8 +127,8 @@ const App = () => {
       console.log("Valid link shared, opening incoming show", showId);
 
       setIncomingShow({
-        id: queryParams?.showId,
-        mediaType: queryParams?.media,
+        id: showId,
+        mediaType: media,
       });
     }
   };

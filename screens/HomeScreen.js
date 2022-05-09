@@ -9,6 +9,7 @@ import {
   Dimensions,
   Keyboard,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,7 +22,7 @@ import InfoModal from "../components/modals/InfoModal";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const HomeScreen = () => {
+const HomeScreen = ({ incomingShow, setIncomingShow }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const showList = user.show_list || [];
@@ -34,6 +35,52 @@ const HomeScreen = () => {
   const [selectedShow, setSelectedShow] = useState();
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    if (incomingShow) {
+      const { id, mediaType } = incomingShow;
+
+      fetch(`${MOVIEDB_API_URL}${mediaType}/${id}?api_key=${MOVIEDB_API_KEY}`)
+        .then((response) => response.json())
+        .then((show) => {
+          if (show?.success === false) {
+            setIncomingShow(null);
+            return Alert.alert("Unable to find movie or show that was shared");
+          }
+
+          const showInfo = {
+            id: show.id,
+            media_type: mediaType,
+            poster: show.poster_path,
+            backdrop: show.backdrop_path,
+            title: mediaType === "movie" ? show.title : show.name,
+            date:
+              mediaType === "movie"
+                ? show.release_date
+                  ? show.release_date.split("-")[0]
+                  : ""
+                : show.first_air_date
+                ? show.first_air_date.split("-")[0]
+                : "",
+            favorited: false,
+            watched: false,
+            rating: 0,
+          };
+
+          if (showList.map((s) => s.id).includes(showInfo.id)) {
+            setIncomingShow(null);
+            return Alert.alert(`${showInfo.title} is already on your list`);
+          }
+
+          setSelectedShow(showInfo);
+          setInfoModalVisible(true);
+          setIncomingShow(null);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [incomingShow]);
 
   useEffect(() => {
     if (searchState) {
@@ -180,7 +227,9 @@ const HomeScreen = () => {
           modalVisible={infoModalVisible}
           setModalVisible={setInfoModalVisible}
           info={selectedShow}
-          onList={true}
+          onList={showList.map((s) => s.id).includes(selectedShow?.id)}
+          addShowToList={addShowToList}
+          onHomeScreen={true}
         />
       ) : null}
     </View>

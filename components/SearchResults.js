@@ -69,6 +69,7 @@ const SearchResults = ({ resState, addShowToList }) => {
             info={item}
             onList={false}
             addShowToList={addShowToList}
+            onHomeScreen={false}
           />
         </View>
         {loading ? (

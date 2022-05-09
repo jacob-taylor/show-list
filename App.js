@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import * as Linking from "expo-linking";
 
 // React Navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -73,7 +74,7 @@ const LoginStackScreen = () => {
   );
 };
 
-const TabScreen = () => {
+const TabScreen = ({ incomingShow, setIncomingShow }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -94,11 +95,14 @@ const TabScreen = () => {
         tabBarHideOnKeyboard: true,
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Home" options={{ headerShown: false }}>
+        {() => (
+          <HomeScreen
+            incomingShow={incomingShow}
+            setIncomingShow={setIncomingShow}
+          />
+        )}
+      </Tab.Screen>
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
@@ -109,10 +113,31 @@ const TabScreen = () => {
 };
 
 const App = () => {
+  const [incomingShow, setIncomingShow] = useState(null);
+
+  const handleUrl = ({ url }) => {
+    const { path, queryParams } = Linking.parse(url);
+    const { showId, media } = queryParams;
+
+    if (
+      path === "info" &&
+      showId !== "null" &&
+      (media === "movie" || media === "tv")
+    ) {
+      console.log("Valid link shared, opening incoming show", showId);
+
+      setIncomingShow({
+        id: queryParams?.showId,
+        mediaType: queryParams?.media,
+      });
+    }
+  };
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
+    Linking.addEventListener("url", handleUrl);
     if (user.loggedIn) {
       console.log("User logged in, running startup jobs");
       registerForPushNotificationsAsync();
@@ -122,7 +147,14 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {user.loggedIn ? <TabScreen /> : <LoginStackScreen />}
+      {user.loggedIn ? (
+        <TabScreen
+          incomingShow={incomingShow}
+          setIncomingShow={setIncomingShow}
+        />
+      ) : (
+        <LoginStackScreen />
+      )}
     </NavigationContainer>
   );
 };

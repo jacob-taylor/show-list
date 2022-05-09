@@ -31,6 +31,7 @@ const InfoModal = ({
   info,
   onList,
   addShowToList,
+  onHomeScreen,
 }) => {
   const dispatch = useDispatch();
 
@@ -75,6 +76,11 @@ const InfoModal = ({
     setLoading(true);
 
     await addShowToList(info);
+
+    if (onHomeScreen) {
+      setLoading(false);
+      setModalVisible(false);
+    }
   };
 
   return (

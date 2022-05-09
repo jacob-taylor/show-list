@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  Share,
 } from "react-native";
 import { MOVIEDB_POSTER_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
@@ -96,7 +97,11 @@ const ShowCard = ({ show, cardPressHandler }) => {
     }));
   };
 
-  const sendHandler = () => {};
+  const sendHandler = () => {
+    Share.share({
+      url: `https://shrouded-fjord-41573.herokuapp.com/share?id=${show.id}&media=${show.media_type}`,
+    });
+  };
 
   if (!show) {
     return <View></View>;

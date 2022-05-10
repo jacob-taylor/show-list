@@ -14,7 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-//TODO Make sure to add an unique ID for manually added shows
 const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
   const [titleState, setTitleState] = useState("");
   const pressHandler = () => {

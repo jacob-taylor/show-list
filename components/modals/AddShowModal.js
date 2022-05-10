@@ -7,6 +7,7 @@ import {
   Dimensions,
   Modal,
   Image,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -15,6 +16,21 @@ const screenHeight = Dimensions.get("screen").height;
 
 //TODO Make sure to add an unique ID for manually added shows
 const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
+  const [titleState, setTitleState] = useState("");
+  const pressHandler = () => {
+    if (titleState !== "") {
+      const show = {
+        title: titleState,
+        favorited: false,
+        watched: false,
+        rating: 0,
+      };
+      addShowToList(show);
+    }
+  };
+  const titleHandler = (text) => {
+    setTitleState(text);
+  };
   return (
     <Modal
       visible={modalVisible}
@@ -34,11 +50,15 @@ const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
           source={require("../../assets/empty-poster.png")}
           style={styles.streamingImg}
         />
+        <TextInput
+          placeholder="Add Title"
+          placeholderTextColor="gray"
+          value={titleState}
+          onChangeText={(newText) => titleHandler(newText)}
+        />
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: "#0044D0" }]}
-          onPress={() => {
-            //need to add user intput into "info" : addShowToList(info);
-          }}
+          onPress={() => pressHandler()}
         >
           <Text style={{ color: "white", fontWeight: "bold" }}>
             Add to List
@@ -52,6 +72,7 @@ const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
 const styles = StyleSheet.create({
   modalView: {
     backgroundColor: "white",
+    alignItems: "center",
     padding: 35,
     flex: 1,
   },

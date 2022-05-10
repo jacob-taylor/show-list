@@ -51,13 +51,15 @@ const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
           source={require("../../assets/empty-poster.png")}
           style={styles.streamingImg}
         />
-        <TextInput
-          placeholder="Add Title"
-          placeholderTextColor="gray"
-          value={titleState}
-          onChangeText={(newText) => titleHandler(newText)}
-          style={styles.btn}
-        />
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Movie / TV Title"
+            placeholderTextColor="gray"
+            value={titleState}
+            onChangeText={(newText) => titleHandler(newText)}
+            style={styles.input}
+          />
+        </View>
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: "#0044D0" }]}
           onPress={() => pressHandler()}
@@ -96,13 +98,34 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: "100%",
   },
+  inputContainer: {
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.5,
+    elevation: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    padding: 10,
+    marginVertical: 20,
+    backgroundColor: "white",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    width: "100%",
+    height: "100%",
+  },
   closeBtn: {
     backgroundColor: "black",
     borderRadius: 50,
     alignSelf: "flex-start",
   },
   streamingImg: {
-    height: screenHeight * 0.3,
+    height: screenHeight * 0.35,
     width: screenWidth * 0.7,
     borderRadius: 20,
     marginTop: 20,

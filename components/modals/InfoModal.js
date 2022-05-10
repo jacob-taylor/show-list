@@ -106,16 +106,19 @@ const InfoModal = ({
               );
             }}
           >
-            <Image
-              source={
-                info.poster || info.backdrop
-                  ? {
-                      uri: MOVIEDB_POSTER_URL + (info.backdrop || info.poster),
-                    }
-                  : require("../../assets/empty-poster.png")
-              }
-              style={styles.streamingImg}
-            />
+            {info.poster || info.backdrop ? (
+              <Image
+                source={{
+                  uri: MOVIEDB_POSTER_URL + (info.backdrop || info.poster),
+                }}
+                style={styles.streamingImg}
+              />
+            ) : (
+              <Image
+                source={require("../../assets/empty-poster.png")}
+                style={styles.noImage}
+              />
+            )}
           </TouchableOpacity>
           <Text
             style={{ fontSize: 38, fontWeight: "bold", textAlign: "center" }}
@@ -283,6 +286,13 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.7,
     borderRadius: 20,
     marginTop: 20,
+    alignSelf: "center",
+  },
+  noImage: {
+    height: screenHeight * 0.35,
+    width: screenWidth * 0.7,
+    borderRadius: 20,
+    marginVertical: 20,
     alignSelf: "center",
   },
 });

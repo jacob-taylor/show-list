@@ -20,6 +20,7 @@ const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
   const pressHandler = () => {
     if (titleState !== "") {
       const show = {
+        id: Math.floor(Math.random() * 999999) + 1,
         title: titleState,
         favorited: false,
         watched: false,
@@ -55,6 +56,7 @@ const AddShowModal = ({ modalVisible, setModalVisible, addShowToList }) => {
           placeholderTextColor="gray"
           value={titleState}
           onChangeText={(newText) => titleHandler(newText)}
+          style={styles.btn}
         />
         <TouchableOpacity
           style={[styles.btn, { backgroundColor: "#0044D0" }]}

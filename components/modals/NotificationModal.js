@@ -98,7 +98,21 @@ const NotificationModal = ({ modalVisible, setModalVisible }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <Button title="Save" onPress={onSave} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              width: "100%",
+            }}
+          >
+            <Button title="Save" onPress={onSave} />
+            <Button
+              title="Cancel"
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            />
+          </View>
         </View>
       </View>
     </Modal>

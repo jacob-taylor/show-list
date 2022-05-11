@@ -205,7 +205,7 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
           }
         >
           {showList
-            // .filter((s) => !s.watched)
+            .filter((s) => !s.watched)
             .map((show, index) => (
               <ShowCard
                 key={index}

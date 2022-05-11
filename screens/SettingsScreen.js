@@ -23,11 +23,10 @@ const screenHeight = Dimensions.get("screen").height;
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
+  const [status, setStatus] = useState();
   const [showStatusModalVisible, setShowStatusModalVisible] = useState(false);
   const [notificationModalVisible, setNotificationModalVisible] =
     useState(false);
-
-  const statusHandler = () => {};
 
   return (
     <View style={{ flex: 1 }}>
@@ -71,6 +70,7 @@ const SettingsScreen = () => {
           style={styles.btn}
           onPress={() => {
             setShowStatusModalVisible(true);
+            setStatus("favorited");
           }}
         >
           <Text>My Favorites</Text>
@@ -79,6 +79,7 @@ const SettingsScreen = () => {
           style={styles.btn}
           onPress={() => {
             setShowStatusModalVisible(true);
+            setStatus("watched");
           }}
         >
           <Text>Previously Watched</Text>
@@ -102,6 +103,8 @@ const SettingsScreen = () => {
         <ShowStatusModal
           modalVisible={showStatusModalVisible}
           setModalVisible={setShowStatusModalVisible}
+          status={status}
+          setStatus={setStatus}
         />
         <NotificationModal
           modalVisible={notificationModalVisible}

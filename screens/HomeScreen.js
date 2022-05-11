@@ -206,10 +206,9 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
         >
           {showList
             .filter((s) => !s.watched)
-            .map((show, index) => (
+            .map((show) => (
               <ShowCard
-                key={index}
-                showIndex={index}
+                key={show._id}
                 show={show}
                 cardPressHandler={() => {
                   setSelectedShow(show);

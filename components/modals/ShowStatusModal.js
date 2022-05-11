@@ -51,7 +51,7 @@ const ShowStatusModal = ({
       animationType="slide"
       presentationStyle="pageSheet"
     >
-      <View style={{ alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center" }}>
         <TouchableOpacity
           onPress={() => {
             setStatus("");
@@ -71,10 +71,9 @@ const ShowStatusModal = ({
         >
           {showList
             .filter((s) => s[status])
-            .map((show, index) => (
+            .map((show) => (
               <ShowCard
-                key={index}
-                showIndex={index}
+                key={show._id}
                 show={show}
                 cardPressHandler={() => {
                   setSelectedShow(show);

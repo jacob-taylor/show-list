@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { logOut } from "../state/actions/user";
 import NotificationModal from "../components/modals/NotificationModal";
-import FavoritesModal from "../components/modals/FavoritesModal";
+import ShowStatusModal from "../components/modals/ShowStatusModal";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -23,9 +23,11 @@ const screenHeight = Dimensions.get("screen").height;
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
-  const [favoritesModalVisible, setFavoritesModalVisible] = useState(false);
+  const [showStatusModalVisible, setShowStatusModalVisible] = useState(false);
   const [notificationModalVisible, setNotificationModalVisible] =
     useState(false);
+
+  const statusHandler = () => {};
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,12 +70,17 @@ const SettingsScreen = () => {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
-            setFavoritesModalVisible(true);
+            setShowStatusModalVisible(true);
           }}
         >
           <Text>My Favorites</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            setShowStatusModalVisible(true);
+          }}
+        >
           <Text>Previously Watched</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -92,9 +99,9 @@ const SettingsScreen = () => {
         >
           <Text>Log Out</Text>
         </TouchableOpacity>
-        <FavoritesModal
-          modalVisible={favoritesModalVisible}
-          setModalVisible={setFavoritesModalVisible}
+        <ShowStatusModal
+          modalVisible={showStatusModalVisible}
+          setModalVisible={setShowStatusModalVisible}
         />
         <NotificationModal
           modalVisible={notificationModalVisible}

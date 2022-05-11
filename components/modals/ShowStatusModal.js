@@ -6,22 +6,23 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
-  Image,
   ScrollView,
-  Linking,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  MOVIEDB_API_KEY,
-  MOVIEDB_API_URL,
-  MOVIEDB_POSTER_URL,
-  IMDB_URL,
-} from "../../constants";
+import { useDispatch, useSelector } from "react-redux";
+import ShowCard from "../ShowCard";
+import InfoModal from "./InfoModal";
+import { fetchShows, removeShow } from "../../state/actions/user";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const FavoritesModal = ({ modalVisible, setModalVisible }) => {
+const ShowStatusModal = ({ modalVisible, setModalVisible, status }) => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const showList = user.show_list || [];
+
   return (
     <Modal
       visible={modalVisible}
@@ -60,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoritesModal;
+export default ShowStatusModal;

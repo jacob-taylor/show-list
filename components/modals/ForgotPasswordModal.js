@@ -20,7 +20,6 @@ const ForgotPasswordModal = ({ modalVisible, setModalVisible }) => {
   const [formData, setFormData] = useState({
     email: "",
     code: null,
-    password: "",
   });
 
   const headers = {
@@ -45,21 +44,80 @@ const ForgotPasswordModal = ({ modalVisible, setModalVisible }) => {
         }));
         setStage(2);
       } else {
-        Alert.alert(responseData?.msg);
+        throw Error(responseData?.msg);
       }
     } catch (error) {
-      console.log(error);
       Alert.alert(error?.message);
+      throw Error(error?.message);
     }
   };
 
-  const handleVerifyCode = () => {};
+  const handleVerifyCode = async (code) => {
+    try {
+      const body = JSON.stringify({ code });
+      const response = await fetch(`${API_URL}/code`, {
+        method: "POST",
+        headers,
+        body,
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        setFormData((formData) => ({
+          ...formData,
+          code,
+        }));
+        setStage(3);
+      } else {
+        throw Error(responseData?.msg);
+      }
+    } catch (error) {
+      Alert.alert(error?.message);
+      throw Error(error?.message);
+    }
+  };
 
   const handleGoBack = () => {
     setStage(1);
   };
 
-  const handleResetPassword = () => {};
+  const handleResetPassword = async (password) => {
+    try {
+      const body = JSON.stringify({
+        email: formData.email,
+        code: formData.code,
+        password,
+      });
+      const response = await fetch(`${API_URL}/password`, {
+        method: "POST",
+        headers,
+        body,
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          "Password Reset",
+          "You can now login with your new password",
+          [
+            {
+              text: "Ok",
+              onPress: () => {
+                setModalVisible(false);
+              },
+            },
+          ]
+        );
+      } else {
+        throw Error(responseData?.msg);
+      }
+    } catch (error) {
+      Alert.alert(error?.message);
+      throw Error(error?.message);
+    }
+  };
 
   const ResetForm = () => {
     const [loading, setLoading] = useState(false);
@@ -92,7 +150,9 @@ const ForgotPasswordModal = ({ modalVisible, setModalVisible }) => {
             style={styles.btn}
             onPress={async () => {
               setLoading(true);
-              await handleRequestCode(email);
+              handleRequestCode(email).catch(() => {
+                setLoading(false);
+              });
             }}
           >
             <Text>Request Reset Code</Text>
@@ -116,11 +176,24 @@ const ForgotPasswordModal = ({ modalVisible, setModalVisible }) => {
           style={styles.input}
           placeholder="Input Code"
           placeholderTextColor="gray"
+          autoCapitalize="none"
+          autoCompleteType="off"
+          keyboardType="number-pad"
+          value={code}
+          onChangeText={(text) => setCode(text)}
         />
         {loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              setLoading(true);
+              handleVerifyCode(code).catch(() => {
+                setLoading(false);
+              });
+            }}
+          >
             <Text>Submit Code</Text>
           </TouchableOpacity>
         )}
@@ -146,16 +219,34 @@ const ForgotPasswordModal = ({ modalVisible, setModalVisible }) => {
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="gray"
+          autoCapitalize="none"
+          autoCompleteType="password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           placeholderTextColor="gray"
+          autoCapitalize="none"
+          autoCompleteType="password"
+          secureTextEntry={true}
+          value={confirmPassword}
+          onChangeText={(text) => setConfirmPassword(text)}
         />
         {loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              setLoading(true);
+              handleResetPassword(password).catch(() => {
+                setLoading(false);
+              });
+            }}
+          >
             <Text>Reset Password</Text>
           </TouchableOpacity>
         )}

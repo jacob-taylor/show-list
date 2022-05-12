@@ -19,14 +19,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bronsky.showlist"
+      "bundleIdentifier": "com.now.thelist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.bronsky.showlist"
+      "package": "com.now.thelist"
     },
     "web": {
       "favicon": "./assets/favicon.png"

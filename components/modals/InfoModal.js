@@ -35,7 +35,7 @@ const InfoModal = ({
 }) => {
   const dispatch = useDispatch();
 
-  const [watchProviders, setWatchProviders] = useState({});
+  const [watchProviders, setWatchProviders] = useState();
   const [imdbLink, setImdbLink] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -49,8 +49,22 @@ const InfoModal = ({
       )
         .then((response) => response.json())
         .then((res) => {
-          // TODO: Ask client about other countries for settings down the road
-          if (res?.results?.US) setWatchProviders(res.results.US);
+          if (res?.results?.US) {
+            const watchProvidersRaw = Object.entries(res.results.US);
+            // Puts streaming first in the list
+            const watchProvidersParsed = [
+              ...watchProvidersRaw.filter(([key, value]) => key === "flatrate"),
+              ...watchProvidersRaw.filter(([key, value]) => key !== "flatrate"),
+            ]
+              .filter(([key, value]) => key !== "link")
+              .filter(
+                ([key, value]) =>
+                  value.filter(
+                    (v) => v.display_priority <= DISPLAY_PRIORITY_CUTOFF
+                  ).length !== 0
+              );
+            setWatchProviders(watchProvidersParsed);
+          }
         });
 
       fetch(
@@ -85,14 +99,10 @@ const InfoModal = ({
 
   const parseStreamingText = (text) => {
     switch (text) {
-      case "buy":
-        return "Buy:";
       case "flatrate":
         return "Stream:";
-      case "rent":
-        return "Rent:";
       default:
-        return text;
+        return text.charAt(0).toUpperCase() + text.slice(1) + ":";
     }
   };
 
@@ -148,76 +158,57 @@ const InfoModal = ({
             indicatorStyle="black"
           >
             {watchProviders
-              ? // TODO: use .sort to sort by key name
-                Object.entries(watchProviders)
-                  .sort((a, b) => {
-                    if (a[0] < b[0]) {
-                      return -1;
-                    }
-                    if (a[0] > b[0]) {
-                      return 1;
-                    }
-                    return 0;
-                  })
-                  .filter(([key, value]) => key !== "link")
-                  .filter(
-                    ([key, value]) =>
-                      value.filter(
-                        (v) => v.display_priority <= DISPLAY_PRIORITY_CUTOFF
-                      ).length !== 0
-                  )
-                  .map(([key, value], index) => {
-                    return (
-                      <View
-                        style={{
-                          paddingVertical: 5,
-                          width: screenWidth * 0.7,
+              ? watchProviders.map(([key, value], index) => {
+                  return (
+                    <View
+                      style={{
+                        paddingVertical: 5,
+                        width: screenWidth * 0.7,
+                      }}
+                      key={index}
+                    >
+                      <Text style={{ marginLeft: 5, fontWeight: "bold" }}>
+                        {parseStreamingText(key)}
+                      </Text>
+                      <ScrollView
+                        horizontal={true}
+                        contentContainerStyle={{
+                          flexDirection: "column",
                         }}
-                        key={index}
+                        indicatorStyle="black"
                       >
-                        <Text style={{ marginLeft: 5, fontWeight: "bold" }}>
-                          {parseStreamingText(key)}
-                        </Text>
-                        <ScrollView
-                          horizontal={true}
-                          contentContainerStyle={{
-                            flexDirection: "column",
-                          }}
-                          indicatorStyle="black"
-                        >
-                          <View style={{ flexDirection: "row" }}>
-                            {value
-                              .filter(
-                                (provider) =>
-                                  provider.display_priority <=
-                                  DISPLAY_PRIORITY_CUTOFF
-                              )
-                              .map((provider) => {
-                                return (
-                                  <TouchableOpacity
-                                    key={provider.provider_id}
-                                    activeOpacity={1}
-                                  >
-                                    <Image
-                                      source={{
-                                        uri:
-                                          MOVIEDB_POSTER_URL +
-                                          provider.logo_path,
-                                      }}
-                                      style={{
-                                        height: 50,
-                                        width: 50,
-                                        marginHorizontal: 5,
-                                      }}
-                                    />
-                                  </TouchableOpacity>
-                                );
-                              })}
-                          </View>
-                        </ScrollView>
-                      </View>
-                    );
-                  })
+                        <View style={{ flexDirection: "row" }}>
+                          {value
+                            .filter(
+                              (provider) =>
+                                provider.display_priority <=
+                                DISPLAY_PRIORITY_CUTOFF
+                            )
+                            .map((provider) => {
+                              return (
+                                <TouchableOpacity
+                                  key={provider.provider_id}
+                                  activeOpacity={1}
+                                >
+                                  <Image
+                                    source={{
+                                      uri:
+                                        MOVIEDB_POSTER_URL + provider.logo_path,
+                                    }}
+                                    style={{
+                                      height: 50,
+                                      width: 50,
+                                      marginHorizontal: 5,
+                                    }}
+                                  />
+                                </TouchableOpacity>
+                              );
+                            })}
+                        </View>
+                      </ScrollView>
+                    </View>
+                  );
+                })
               : null}
           </ScrollView>
           {onList ? (

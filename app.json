@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "show-list",
-    "slug": "show-list",
-    "owner": "redsky-innovations",
+    "name": "the-list",
+    "slug": "the-list",
+    "owner": "the-list-group",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,21 +11,22 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#a4110a"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.now.thelist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#a4110a"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.now.thelist"
     },
     "web": {

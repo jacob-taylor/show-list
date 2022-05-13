@@ -92,6 +92,7 @@ const SettingsScreen = () => {
         >
           <Text>Contact Us</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.btn, { position: "absolute" }]}
           onPress={() => {
@@ -100,6 +101,26 @@ const SettingsScreen = () => {
         >
           <Text>Log Out</Text>
         </TouchableOpacity>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10,
+          }}
+        >
+          <Text style={{ color: "white", fontSize: 8, fontWeight: "bold" }}>
+            Powered By
+          </Text>
+          <Image
+            source={require("../assets/themoviedblogo.png")}
+            style={{
+              height: 50,
+              width: 50,
+            }}
+            resizeMode="contain"
+          />
+        </View>
+
         <ShowStatusModal
           modalVisible={showStatusModalVisible}
           setModalVisible={setShowStatusModalVisible}

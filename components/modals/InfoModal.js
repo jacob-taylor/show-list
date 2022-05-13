@@ -83,6 +83,19 @@ const InfoModal = ({
     }
   };
 
+  const parseStreamingText = (text) => {
+    switch (text) {
+      case "buy":
+        return "Buy:";
+      case "flatrate":
+        return "Stream:";
+      case "rent":
+        return "Rent:";
+      default:
+        return text;
+    }
+  };
+
   return (
     <Modal
       visible={modalVisible}
@@ -162,7 +175,9 @@ const InfoModal = ({
                         }}
                         key={index}
                       >
-                        <Text>{key.toUpperCase()}</Text>
+                        <Text style={{ marginLeft: 5, fontWeight: "bold" }}>
+                          {parseStreamingText(key)}
+                        </Text>
                         <ScrollView
                           horizontal={true}
                           contentContainerStyle={{
@@ -182,10 +197,6 @@ const InfoModal = ({
                                   <TouchableOpacity
                                     key={provider.provider_id}
                                     activeOpacity={1}
-                                    onPress={() => {
-                                      // TODO: Ask if client wants this
-                                      // Linking.openURL(watchProviders.link);
-                                    }}
                                   >
                                     <Image
                                       source={{

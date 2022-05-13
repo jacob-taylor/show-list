@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
   Modal,
   ScrollView,
   RefreshControl,
@@ -15,9 +14,6 @@ import ShowCard from "../ShowCard";
 import InfoModal from "./InfoModal";
 import { fetchShows } from "../../state/actions/user";
 
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
-
 const ShowStatusModal = ({
   modalVisible,
   setModalVisible,
@@ -27,7 +23,7 @@ const ShowStatusModal = ({
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const showList = user.show_list || [];
-  const title = status === "watched" ? "Previously Wathced" : "My Favorites";
+  const title = status === "watched" ? "Previously Watched" : "My Favorites";
 
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -51,7 +47,7 @@ const ShowStatusModal = ({
       animationType="slide"
       presentationStyle="pageSheet"
     >
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center", marginBottom: 20 }}>
         <TouchableOpacity
           onPress={() => {
             setStatus("");

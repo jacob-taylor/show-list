@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "the-list",
+    "name": "The List",
+    "description": "Save a list of movies and shows you want to watch!",
     "slug": "the-list",
     "owner": "the-list-group",
     "version": "1.0.0",

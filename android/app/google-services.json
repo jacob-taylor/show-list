@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "273781583641",
+    "project_id": "the-list-50ebc",
+    "storage_bucket": "the-list-50ebc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273781583641:android:c5bc8050ac38da41415f88",
+        "android_client_info": {
+          "package_name": "com.now.thelist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273781583641-ago0gmn3s4bfgu99v5894k5qo45o85h8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAADqxHIHyC6G6a_FEVkqu94GjsHSdeS2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273781583641-ago0gmn3s4bfgu99v5894k5qo45o85h8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

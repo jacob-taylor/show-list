@@ -8,7 +8,7 @@ import {
   Image,
   Share,
 } from "react-native";
-import { MOVIEDB_POSTER_URL } from "../constants";
+import { MOVIEDB_POSTER_URL, SHARE_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -99,7 +99,7 @@ const ShowCard = ({ show, cardPressHandler }) => {
 
   const sendHandler = () => {
     Share.share({
-      url: `https://shrouded-fjord-41573.herokuapp.com/share?id=${show.id}&media=${show.media_type}`,
+      url: `${SHARE_URL}?id=${show.id}&media=${show.media_type}`,
     });
   };
 

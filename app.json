@@ -17,10 +17,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.now.thelist"
+      "bundleIdentifier": "com.now.thelist",
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +31,8 @@
         "backgroundColor": "#a4110a"
       },
       "googleServicesFile": "./google-services.json",
-      "package": "com.now.thelist"
+      "package": "com.now.thelist",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

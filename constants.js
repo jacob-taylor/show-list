@@ -1,7 +1,7 @@
 // * When running local API use "http://localhost:3000/api";
 // export const API_URL = "http://localhost:3000/api";
 export const API_URL = "https://the-list-now.herokuapp.com/api";
-// export const SHARE_URL = "https://localhost:300/share"
+// export const SHARE_URL = "https://localhost:300/share";
 export const SHARE_URL = "https://share.thelistnow.com/share";
 
 export const MOVIEDB_POSTER_URL = "https://image.tmdb.org/t/p/original";

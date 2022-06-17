@@ -14,7 +14,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 
 import { useDispatch, useSelector } from "react-redux";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import { addShow } from "../state/actions/user";
+import { addShow, fetchShows } from "../state/actions/user";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -192,18 +192,39 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
           <Ionicons name="search-outline" size={30} />
         </View>
 
-        <View style={{ width: "100%", flex: 1 }}>
+        {/* <View style={{ flex: 1, width: "100%" }}>
+          <ShowList
+            type="movie"
+            showList={showList}
+            setSelectedShow={setSelectedShow}
+            setInfoModalVisible={setInfoModalVisible}
+          />
+        </View> */}
+
+        <View
+          style={{
+            width: "100%",
+            flex: 1,
+          }}
+        >
           <TabList.Navigator
             initialRouteName="Movies"
             sceneContainerStyle={{
+              // backgroundColor: "rgba(255, 255, 255, .2)",
               backgroundColor: "transparent",
+              paddingTop: 10,
             }}
             screenOptions={{
               tabBarStyle: {
-                // backgroundColor: "transparent",
+                backgroundColor: "transparent",
               },
-              // tabBarActiveTintColor: "#ffdf2b",
-              tabBarIndicatorStyle: { color: "red" },
+              tabBarLabelStyle: { fontSize: 15, fontWeight: "bold" },
+              tabBarActiveTintColor: "#FFFAE4",
+              tabBarIndicatorStyle: {
+                backgroundColor: "#FFFAE4",
+                width: 150,
+                marginLeft: 25,
+              },
             }}
           >
             <TabList.Screen name="Movies">

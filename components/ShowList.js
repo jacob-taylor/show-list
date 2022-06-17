@@ -49,6 +49,8 @@ const ShowList = ({ type, showList, setSelectedShow, setInfoModalVisible }) => {
   return (
     <DraggableFlatList
       containerStyle={{
+        // borderWidth: 1,
+        // borderColor: "blue",
         flex: 1,
       }}
       refreshControl={

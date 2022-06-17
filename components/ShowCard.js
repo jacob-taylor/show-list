@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderRadius: 10,
-    margin: 10,
+    marginHorizontal: 10,
+    marginVertical: 2,
     height: screenHeight * 0.1,
     padding: 10,
     shadowColor: "#000",
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
   streamingImg: {
     height: screenHeight * 0.1,
     width: 60,
-    borderRadius: 5,
+    // borderRadius: 5,
     marginBottom: 10,
     marginTop: 10,
   },

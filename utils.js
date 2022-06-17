@@ -17,7 +17,11 @@ export const registerForPushNotificationsAsync = async () => {
     if (finalStatus !== "granted") {
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (
+      await Notifications.getExpoPushTokenAsync({
+        experienceId: "@the-list-group/the-list",
+      })
+    ).data;
   }
 
   if (Platform.OS === "android") {

@@ -222,8 +222,8 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
               tabBarActiveTintColor: "#FFFAE4",
               tabBarIndicatorStyle: {
                 backgroundColor: "#FFFAE4",
-                width: 150,
-                marginLeft: 25,
+                width: screenWidth / 4,
+                left: screenWidth / 8,
               },
             }}
           >

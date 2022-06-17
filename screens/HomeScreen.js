@@ -2,25 +2,30 @@ import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
-  ScrollView,
   TextInput,
   SafeAreaView,
   Image,
   Dimensions,
   Keyboard,
-  RefreshControl,
   Alert,
 } from "react-native";
+
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+
 import { useDispatch, useSelector } from "react-redux";
-import { Ionicons } from "@expo/vector-icons";
-import SearchResults from "../components/SearchResults";
-import ShowCard from "../components/ShowCard";
 import { MOVIEDB_API_KEY, MOVIEDB_API_URL } from "../constants";
-import { addShow, fetchShows, removeShow } from "../state/actions/user";
+import { addShow } from "../state/actions/user";
+
+import { Ionicons } from "@expo/vector-icons";
+
+import SearchResults from "../components/SearchResults";
 import InfoModal from "../components/modals/InfoModal";
+import ShowList from "../components/ShowList";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
+
+const TabList = createMaterialTopTabNavigator();
 
 const HomeScreen = ({ incomingShow, setIncomingShow }) => {
   const dispatch = useDispatch();
@@ -34,7 +39,6 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
   const [resState, setResState] = useState(initialResState);
   const [selectedShow, setSelectedShow] = useState();
   const [infoModalVisible, setInfoModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (incomingShow) {
@@ -145,18 +149,6 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
     setSearchState(search);
   };
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    dispatch(fetchShows())
-      .then(() => {
-        setRefreshing(false);
-      })
-      .catch((err) => {
-        setRefreshing(false);
-        console.log(err);
-      });
-  };
-
   return (
     <View style={{ flex: 1 }}>
       <Image
@@ -199,24 +191,44 @@ const HomeScreen = ({ incomingShow, setIncomingShow }) => {
           />
           <Ionicons name="search-outline" size={30} />
         </View>
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {showList
-            .filter((s) => !s.watched)
-            .map((show) => (
-              <ShowCard
-                key={show._id}
-                show={show}
-                cardPressHandler={() => {
-                  setSelectedShow(show);
-                  setInfoModalVisible(true);
-                }}
-              />
-            ))}
-        </ScrollView>
+
+        <View style={{ width: "100%", flex: 1 }}>
+          <TabList.Navigator
+            initialRouteName="Movies"
+            sceneContainerStyle={{
+              backgroundColor: "transparent",
+            }}
+            screenOptions={{
+              tabBarStyle: {
+                // backgroundColor: "transparent",
+              },
+              // tabBarActiveTintColor: "#ffdf2b",
+              tabBarIndicatorStyle: { color: "red" },
+            }}
+          >
+            <TabList.Screen name="Movies">
+              {() => (
+                <ShowList
+                  type="movie"
+                  showList={showList}
+                  setSelectedShow={setSelectedShow}
+                  setInfoModalVisible={setInfoModalVisible}
+                />
+              )}
+            </TabList.Screen>
+            <TabList.Screen name="TV">
+              {() => (
+                <ShowList
+                  type="tv"
+                  showList={showList}
+                  setSelectedShow={setSelectedShow}
+                  setInfoModalVisible={setInfoModalVisible}
+                />
+              )}
+            </TabList.Screen>
+          </TabList.Navigator>
+        </View>
+
         {searchState.length > 0 ? (
           <SearchResults resState={resState} addShowToList={addShowToList} />
         ) : null}

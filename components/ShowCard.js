@@ -19,7 +19,7 @@ import { getDateWithNoTime } from "../utils";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const ShowCard = ({ show, cardPressHandler }) => {
+const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
   const dispatch = useDispatch();
 
   const initialCardState = {
@@ -111,6 +111,8 @@ const ShowCard = ({ show, cardPressHandler }) => {
       style={styles.container}
       activeOpacity={0.85}
       onPress={cardPressHandler}
+      onLongPress={longPressHandler}
+      disabled={isActive}
     >
       <View style={styles.checkBox}>
         <TouchableOpacity onPress={watchedHandler}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, RefreshControl, View } from "react-native";
 
 import DraggableFlatList, {
@@ -6,16 +6,30 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 
 import { useDispatch } from "react-redux";
-import { fetchShows } from "../state/actions/user";
+import { editShowsOrder, fetchShows } from "../state/actions/user";
 
 import ShowCard from "../components/ShowCard";
 
 const ShowList = ({ type, showList, setSelectedShow, setInfoModalVisible }) => {
-  const [refreshing, setRefreshing] = useState(false);
-
   const showListByType = showList.filter((s) => s.media_type === type);
 
+  const [refreshing, setRefreshing] = useState(false);
+  const [showListOrder, setShowListOrder] = useState(showListByType);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Keeps the on screen state in line with the redux/DB state when store is updated
+    setShowListOrder(showList.filter((s) => s.media_type === type));
+  }, [showList]);
+
+  const handleDragEnd = ({ data }) => {
+    // Updates on screen order quickly
+    setShowListOrder(data.map((s, i) => ({ ...s, order: i })));
+    // Saves the new order in the DB
+    const shows = data.map((s, i) => ({ _id: s._id, order: i }));
+    dispatch(editShowsOrder(shows));
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -56,12 +70,12 @@ const ShowList = ({ type, showList, setSelectedShow, setInfoModalVisible }) => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      data={showListByType.filter((s) => !s.watched)}
+      data={showListOrder
+        .filter((s) => !s.watched)
+        .sort((a, b) => a.order > b.order)}
       renderItem={renderShowCard}
       keyExtractor={(item) => item._id}
-      onDragEnd={({ data }) => {
-        console.log("data", data);
-      }}
+      onDragEnd={handleDragEnd}
     />
   );
 };

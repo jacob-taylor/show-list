@@ -280,3 +280,42 @@ export const editShow = (data) => {
     }
   };
 };
+
+export const editShowsOrder = (data) => {
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const body = JSON.stringify({
+      shows: data,
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/shows/order`, {
+        method: "PATCH",
+        headers,
+        body,
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("responseData", responseData);
+        dispatch({
+          type: SET_SHOWS,
+          data: responseData.shows,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to edit show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
+      } else {
+        Alert.alert("Unable to edit show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+};

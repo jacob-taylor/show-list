@@ -7,29 +7,34 @@ import {
   Dimensions,
   Image,
   Share,
+  Alert,
 } from "react-native";
 import { MOVIEDB_POSTER_URL, SHARE_URL } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 import RatingModal from "./modals/RatingModal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useDispatch } from "react-redux";
-import { editShow } from "../state/actions/user";
-import { getDateWithNoTime } from "../utils";
+import { useDispatch, useSelector } from "react-redux";
+import { editShow, editShowReminder } from "../state/actions/user";
+import { useNavigation } from "@react-navigation/native";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
 
   const initialCardState = {
     favorited: show?.favorited,
-    reminder_date: show?.reminder_date,
     rating: show?.rating,
   };
 
   const [cardState, setCardState] = useState(initialCardState);
   const [watchedState, setWatchedState] = useState(show?.watched);
+  const [reminderDate, setReminderDate] = useState(show?.reminder_date);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
@@ -37,7 +42,6 @@ const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
     return (
       initialCardState.favorited === cardState.favorited &&
       initialCardState.watched === cardState.watched &&
-      initialCardState.reminder_date === cardState.reminder_date &&
       initialCardState.rating === cardState.rating
     );
   };
@@ -66,14 +70,22 @@ const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
     }
   }, [watchedState]);
 
-  const onDateChange = (selectedDate) => {
-    console.log(selectedDate);
+  useEffect(() => {
+    if (show && reminderDate !== show?.reminder_date) {
+      console.log("reminderDate changed, editing show", show.title);
+      console.log(reminderDate.toString());
+      dispatch(
+        editShowReminder({
+          _id: show._id,
+          reminder_date: reminderDate,
+        })
+      );
+    }
+  }, [reminderDate]);
 
+  const onDateChange = (selectedDate) => {
+    setReminderDate(selectedDate);
     setPickerVisible(false);
-    setCardState((cardState) => ({
-      ...cardState,
-      reminder_date: selectedDate,
-    }));
   };
 
   const watchedHandler = () => {
@@ -101,6 +113,27 @@ const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
     Share.share({
       url: `${SHARE_URL}?id=${show.id}&media=${show.media_type}`,
     });
+  };
+
+  const showDatetimeModal = () => {
+    console.log("user.push_token", user.push_token);
+    if (user.push_token) {
+      setPickerVisible(true);
+    } else {
+      Alert.alert(
+        "Push notifications must be enabled to use the reminder function",
+        "",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Go to Settings",
+            onPress: () => {
+              navigation.navigate("Settings");
+            },
+          },
+        ]
+      );
+    }
   };
 
   if (!show) {
@@ -163,13 +196,10 @@ const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
         <TouchableOpacity onPress={sendHandler}>
           <Ionicons name="send" color="orange" size={28} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setPickerVisible(true)}>
+        <TouchableOpacity onPress={showDatetimeModal}>
           <Ionicons
             name={
-              getDateWithNoTime(new Date(cardState.reminder_date)).getDate() >=
-              getDateWithNoTime().getDate()
-                ? "alarm"
-                : "alarm-outline"
+              new Date(reminderDate) >= new Date() ? "alarm" : "alarm-outline"
             }
             color="blue"
             size={28}
@@ -185,12 +215,9 @@ const ShowCard = ({ show, cardPressHandler, longPressHandler, isActive }) => {
       />
       <DateTimePickerModal
         isVisible={pickerVisible}
-        mode="date"
-        date={
-          cardState.reminder_date
-            ? getDateWithNoTime(new Date(cardState.reminder_date))
-            : getDateWithNoTime()
-        }
+        mode="datetime"
+        minuteInterval={15}
+        date={reminderDate ? new Date(reminderDate) : new Date()}
         onConfirm={onDateChange}
         onCancel={() => {
           setPickerVisible(false);

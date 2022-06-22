@@ -97,7 +97,7 @@ export const editUser = (data) => {
       push_notifications,
     };
     const body = JSON.stringify({ ...currentUserData, ...data });
-
+    console.log("edit user body", body);
     try {
       const response = await fetch(`${API_URL}/users`, {
         method: "PATCH",
@@ -106,11 +106,13 @@ export const editUser = (data) => {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
+        const { editedUser } = await response.json();
+
+        console.log(editedUser);
 
         dispatch({
           type: EDIT_USER,
-          ...responseData,
+          data: editedUser,
         });
       } else if (response.status === 400) {
         throw new Error(reponseData?.error);
@@ -256,6 +258,45 @@ export const editShow = (data) => {
 
     try {
       const response = await fetch(`${API_URL}/shows`, {
+        method: "PATCH",
+        headers,
+        body,
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        dispatch({
+          type: EDIT_SHOW,
+          data: responseData.show,
+        });
+      } else if (response.status === 400) {
+        Alert.alert("Unable to edit show", "Please try again");
+      } else if (response.status === 401) {
+        dispatch(logOut());
+      } else {
+        Alert.alert("Unable to edit show", "Please try again");
+      }
+    } catch (err) {
+      Alert.alert(err.message);
+    }
+  };
+};
+
+export const editShowReminder = (data) => {
+  return async (dispatch, getState) => {
+    const { token } = getState().user;
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const body = JSON.stringify({
+      show: data,
+    });
+
+    try {
+      const response = await fetch(`${API_URL}/shows/reminder`, {
         method: "PATCH",
         headers,
         body,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   StyleSheet,
@@ -22,6 +22,13 @@ const RatingModal = ({
   ratingHandler,
 }) => {
   const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    if (rating > 0) {
+      ratingHandler(rating);
+      setModalVisible(false);
+    }
+  }, [rating]);
 
   return (
     <Modal
@@ -96,13 +103,13 @@ const RatingModal = ({
               />
             </TouchableOpacity>
           </View>
-          <Button
+          {/* <Button
             title="Rate"
             onPress={() => {
               ratingHandler(rating);
               setModalVisible(false);
             }}
-          />
+          /> */}
         </View>
       </View>
     </Modal>
